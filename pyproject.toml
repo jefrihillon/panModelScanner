@@ -1,0 +1,15 @@
+[project]
+name = "airs-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "model-security-client[all]>=0.0.1",
+]
+
+[[tool.uv.index]]
+url = "https://us-west1-python.pkg.dev/pairs-modelsec-prd-l9mu/ms-prod-usw1-mp-main-pypi/simple/"
+
+[[tool.uv.index]]
+url = "file:///Users/jhillon/AI/Palo/AIRS_API"
