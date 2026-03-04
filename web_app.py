@@ -18,6 +18,7 @@ def scan_specific_web():
     """Scan a specific Hugging Face model"""
     model_url = request.form.get('model_url')
     security_group_uuid = request.form.get('security_group_uuid')
+    env_label = request.form.get('env_label', 'default')
 
     if not security_group_uuid:
         return jsonify({"error": "Security Group UUID is required"}), 400
@@ -27,7 +28,7 @@ def scan_specific_web():
 
     try:
         # Use the existing function but parse the result for web display
-        result_text = scan_specific_model(model_url, security_group_uuid)
+        result_text = scan_specific_model(model_url, security_group_uuid, env_label)
         # Parse the result to extract model ID and scan outcome
         if "scan completed:" in result_text:
             parts = result_text.split(" scan completed: ")
@@ -71,6 +72,7 @@ def scan_models_by_criteria_web():
     sort = request.form.get('sort', '').strip()
     direction_str = request.form.get('direction', '').strip()
     security_group_uuid = request.form.get('security_group_uuid', '').strip()
+    env_label = request.form.get('env_label', 'default')
 
     if not security_group_uuid:
         return jsonify({"error": "Security Group UUID is required"}), 400
@@ -101,7 +103,8 @@ def scan_models_by_criteria_web():
             limit=limit,
             sort=sort if sort else None,
             direction=direction,
-            security_group_uuid=security_group_uuid
+            security_group_uuid=security_group_uuid,
+            env_label=env_label
         )
 
         # Parse results for web display

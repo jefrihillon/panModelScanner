@@ -9,7 +9,7 @@ client = ModelSecurityAPIClient(
     base_url="https://api.sase.paloaltonetworks.com/aims"
 )
 
-def scan_hf_model(model, security_group_uuid):
+def scan_hf_model(model, security_group_uuid, env_label="default"):
     """Scan a single Hugging Face model for security vulnerabilities"""
     try:
         model_version = api.model_info(model.modelId).sha
@@ -17,24 +17,25 @@ def scan_hf_model(model, security_group_uuid):
                 security_group_uuid=security_group_uuid,
                 model_uri=HF_URI + model.modelId,
                 model_version=model_version,
-                labels={ "env": "j5k-testGroup1" }
+                labels={ "env": env_label }
         )
         return f"{model.modelId} scan completed: {result.eval_outcome}"
     except Exception as e:
         return f"{model.modelId} scan failed: {str(e)}"
 
-def scan_specific_model(model_url, security_group_uuid):
+def scan_specific_model(model_url, security_group_uuid, env_label="default"):
     """Scan a specific model by URL"""
     try:
         model_info = api.model_info(model_url.replace(HF_URI, ""))
-        return scan_hf_model(model_info, security_group_uuid)
+        return scan_hf_model(model_info, security_group_uuid, env_label)
     except Exception as e:
         return f"Failed to scan model: {str(e)}"
 
 def scan_models_by_criteria(tag=None, author=None, model_name=None, search=None,
                            trained_dataset=None, library=None, language=None,
                            tags=None, limit=None, sort=None, direction=None,
-                           security_group_uuid="715dab90-31ad-44f6-9fe2-dcef4335ec35"):
+                           security_group_uuid="715dab90-31ad-44f6-9fe2-dcef4335ec35",
+                           env_label="default"):
     """Scan models based on various criteria from the Hugging Face API"""
     try:
         # Prepare filter parameters, only include non-None values
@@ -68,7 +69,7 @@ def scan_models_by_criteria(tag=None, author=None, model_name=None, search=None,
 
         results = []
         for model in models:
-            result = scan_hf_model(model, security_group_uuid)
+            result = scan_hf_model(model, security_group_uuid, env_label)
             results.append(result)
 
         return results
@@ -82,9 +83,13 @@ def run_scan():
         print("Security group UUID is required.")
         return
 
+    env_label = input("Enter environment label (optional, press Enter for 'default'): ").strip()
+    if not env_label:
+        env_label = "default"
+
     model_url = input("If you have a specific Hugging Face model in mind, enter the full URL here (optional): ")
     if model_url:
-        print(scan_specific_model(model_url, security_group_uuid))
+        print(scan_specific_model(model_url, security_group_uuid, env_label))
     else:
         print("Enter search criteria (leave blank for no filter):")
         tag = input("Task Type (pipeline_tag): ").strip()
@@ -122,8 +127,9 @@ def run_scan():
         if limit:
             params['limit'] = limit
 
-        # Add security_group_uuid to params
+        # Add security_group_uuid and env_label to params
         params['security_group_uuid'] = security_group_uuid
+        params['env_label'] = env_label
 
         if not params:
             print("No search criteria provided. Scanning popular models...")

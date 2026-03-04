@@ -103,6 +103,11 @@
                 <input type="text" id="security_group_uuid" name="security_group_uuid" placeholder="Enter your security group UUID" required>
                 <small>This UUID determines which models will be scanned based on your security group settings</small>
             </div>
+            <div class="form-group">
+                <label for="env_label">Environment Label (Optional):</label>
+                <input type="text" id="env_label" name="env_label" placeholder="Enter environment label (default: default)">
+                <small>Custom label for the scan environment. If left blank, 'default' will be used.</small>
+            </div>
         </div>
 
         <!-- Specific Model Scan Section -->
@@ -205,6 +210,7 @@
             const formData = new FormData(this);
             const modelUrl = formData.get('model_url');
             const securityGroupUuid = document.getElementById('security_group_uuid').value;
+            const envLabel = document.getElementById('env_label').value || 'default';
 
             if (!securityGroupUuid) {
                 showResult('Security Group UUID is required', 'error');
@@ -216,8 +222,9 @@
                 return;
             }
 
-            // Add security group UUID to form data
+            // Add security group UUID and env label to form data
             formData.append('security_group_uuid', securityGroupUuid);
+            formData.append('env_label', envLabel);
 
             showLoading(true);
 
@@ -250,6 +257,7 @@
             const tag = formData.get('tag');
             const author = formData.get('author');
             const securityGroupUuid = document.getElementById('security_group_uuid').value;
+            const envLabel = document.getElementById('env_label').value || 'default';
 
             if (!securityGroupUuid) {
                 showResult('Security Group UUID is required', 'error');
@@ -261,8 +269,9 @@
                 return;
             }
 
-            // Add security group UUID to form data
+            // Add security group UUID and env label to form data
             formData.append('security_group_uuid', securityGroupUuid);
+            formData.append('env_label', envLabel);
 
             showLoading(true);
 
