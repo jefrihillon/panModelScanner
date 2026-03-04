@@ -2,6 +2,8 @@
 
 This application provides a web interface for scanning Hugging Face models for security vulnerabilities using the Palo Alto Networks Model Security API. Users must provide a security group UUID to specify which models to scan based on their security group settings.
 
+Please see AI Model Scanning documentation at: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security
+
 ## Features
 
 - Scan specific Hugging Face models by URL
@@ -25,7 +27,15 @@ The application supports the following search criteria for finding models:
 ## Installation
 
 ### Option 1: Manual Installation
-1. Install the required dependencies:
+1. Set up the required environment variables or create and source .env file:
+   ```bash
+   export MODEL_SECURITY_CLIENT_ID="your_client_id"
+   export MODEL_SECURITY_CLIENT_SECRET="your_client_secret"
+   export TSG_ID="your_tsg_id"
+   ```
+2. Install AI Model Security.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security
+
+3. Install remaining required dependencies:
    ```bash
    pip install -r requirements.txt
    ```
@@ -35,42 +45,21 @@ The application supports the following search criteria for finding models:
    uv pip install -r pyproject.toml
    ```
 
-2. Set up the required environment variables:
+### Option 2: Using Build Script
+1. Set up the required environment variables or create and source .env:
    ```bash
    export MODEL_SECURITY_CLIENT_ID="your_client_id"
    export MODEL_SECURITY_CLIENT_SECRET="your_client_secret"
    export TSG_ID="your_tsg_id"
    ```
 
-### Option 2: Using Build Script
 1. Run the build script:
    ```bash
    ./build.sh
    ```
 
-2. Set up the required environment variables:
-   ```bash
-   export MODEL_SECURITY_CLIENT_ID="your_client_id"
-   export MODEL_SECURITY_CLIENT_SECRET="your_client_secret"
-   export TSG_ID="your_tsg_id"
-   ```
-
-### Option 3: Using Environment File
-1. Create an .env file with your actual values:
-   ```bash
-   # Update the values in .env file
-   MODEL_SECURITY_CLIENT_ID="your_client_id"
-   MODEL_SECURITY_CLIENT_SECRET="your_client_secret"
-   TSG_ID="your_tsg_id"
-   ```
-
-2. Source the environment file:
-   ```bash
-   source .env
-   ```
-
-### Option 4: Docker Installation
-With Docker installed, you can build and run the application using either the Dockerfile directly or docker-compose. The Dockerfile expects to find a .env file with the required environment variables configured with your specific credentials. Make sure to update the .env file with your actual credentials before running the Docker containers.
+### Option 3: Docker Installation
+With Docker installed, you can build and run the application using either the Dockerfile directly or docker compose. The Dockerfile uses BuildKit secrets to securely handle environment variables during the build process, preventing credentials from being copied into the container image. Make sure to have a .env file with your actual credentials before building the Docker image.
 
 ## Usage
 
@@ -82,7 +71,7 @@ With Docker installed, you can build and run the application using either the Do
 
 2. Open your browser and navigate to `http://localhost:5000`
 
-3. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page. This UUID determines which models will be scanned based on your security group settings.
+3. When using the web interface, you'll need to provide the Security Group UUID (See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/scanning-models for info on Security Group UUIDs) into the input field at the top of the page. This UUID determines the security group settings.
 
 ### Using Run Script
 1. Set up environment variables (see Installation section)
@@ -105,11 +94,30 @@ python main.py --cli
 When running the CLI, you'll be prompted to enter a Security Group UUID before proceeding with the scan.
 
 ### Docker Execution
-1. Update the .env file with your actual MODEL_SECURITY_CLIENT_ID, MODEL_SECURITY_CLIENT_SECRET, and TSG_ID values
-
-2. Build and run with Docker:
+1. Create individual secret files with your credentials:
    ```bash
-   docker build -t hf-model-scanner .
+   # You can either extract values from .env file:
+   ./extract_secrets.sh
+
+   # Or create the files manually:
+   echo "your_client_id" > id.txt
+   echo "your_client_secret" > secret.txt
+   echo "your_tsg_id" > tsg.txt
+   ```
+
+2. Build and run with Docker using BuildKit secrets:
+   ```bash
+   # Enable BuildKit (if docker version < 23.x.x)
+   export DOCKER_BUILDKIT=1
+
+   # Build with secrets (credentials are NOT stored in the image)
+   docker build -t hf-model-scanner \
+     --secret id=id,src=id.txt \
+     --secret id=secret,src=secret.txt \
+     --secret id=tsg,src=tsg.txt \
+     .
+
+   # Run with environment variables (these are needed at runtime)
    docker run -p 5000:5000 --env-file .env hf-model-scanner
    ```
 
@@ -117,11 +125,29 @@ When running the CLI, you'll be prompted to enter a Security Group UUID before p
 
 4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
 
+Note: During the build process, BuildKit secrets are used to authenticate with the model security service, but these secrets are NOT stored in the final image. Runtime environment variables are provided separately via the --env-file flag.
+
 ### Docker Compose Execution
-1. Update the .env file with your actual MODEL_SECURITY_CLIENT_ID, MODEL_SECURITY_CLIENT_SECRET, and TSG_ID values
+1. Create individual secret files with your credentials:
+   ```bash
+   # You can either extract values from .env file:
+   ./extract_secrets.sh
+
+   # Or create the files manually:
+   echo "your_client_id" > id.txt
+   echo "your_client_secret" > secret.txt
+   echo "your_tsg_id" > tsg.txt
+   ```
 
 2. Run with docker-compose:
    ```bash
+   # Enable BuildKit
+   export DOCKER_BUILDKIT=1
+
+   # Build with secrets (credentials are NOT stored in the image)
+   docker-compose build
+
+   # Run with environment variables
    docker-compose up -d
    ```
 
@@ -129,7 +155,7 @@ When running the CLI, you'll be prompted to enter a Security Group UUID before p
 
 4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
 
-Note: The Docker image now loads environment variables from the .env file, so you can modify your credentials there instead of setting them as environment variables in your shell.
+Note: During the build process, BuildKit secrets are used to authenticate with the model security service, but these secrets are NOT stored in the final image. Runtime environment variables are provided separately via the env_file directive in compose.yml.
 
 ## How It Works
 

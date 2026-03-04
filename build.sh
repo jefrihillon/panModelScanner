@@ -19,8 +19,24 @@ source venv/bin/activate
 # Upgrade pip
 pip install --upgrade pip
 
+# Check if required environment variables are set
+if [ -z "$MODEL_SECURITY_CLIENT_ID" ] || [ -z "$MODEL_SECURITY_CLIENT_SECRET" ] || [ -z "$TSG_ID" ]; then
+    echo "Warning: Required environment variables not set."
+    echo "Please set the following environment variables:"
+    echo "  export MODEL_SECURITY_CLIENT_ID='your_client_id'"
+    echo "  export MODEL_SECURITY_CLIENT_SECRET='your_client_secret'"
+    echo "  export TSG_ID='your_tsg_id'"
+    echo ""
+    echo "Or create and source an .env file with these variables and run the build script again."
+fi
+
+# Install model-security-client
+echo "Installing model-security-client..."
+chmod +x model_scan.sh
+./model_scan.sh | xargs -I {} pip install "model-security-client[all]" --extra-index-url {}
+
 # Install dependencies
-echo "Installing dependencies..."
+echo "Installing remainingdependencies..."
 pip install -r requirements.txt
 
 echo "Build complete!"

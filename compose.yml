@@ -1,11 +1,22 @@
-#version: '3.8'
-
 services:
   model-scanner:
-    build: .
+    build:
+      context: .
+      secrets:
+        - id
+        - secret
+        - tsg
     ports:
       - "5000:5000"
-    env_file:
-      - .env
     volumes:
       - .:/app
+    env_file:
+      - .env
+
+secrets:
+  id:
+    file: ./id.txt
+  secret:
+    file: ./secret.txt
+  tsg:
+    file: ./tsg.txt

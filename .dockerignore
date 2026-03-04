@@ -1,0 +1,33 @@
+# Ignore sensitive files
+.env
+.env.*
+!.env.example
+
+# Ignore secret files
+*.txt
+!README.md
+!requirements.txt
+!Dockerfile
+
+# Ignore cache and temporary files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+.coverage
+.git/
+
+# Ignore logs
+*.log
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore OS generated files
+.DS_Store*
+Thumbs.db
