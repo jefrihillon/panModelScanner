@@ -1,4 +1,4 @@
-from model_security_client.api import ModelSecurityAPIClient
+from model_security_client import ModelSecurityAPIClient
 
 # Initialize the client
 client = ModelSecurityAPIClient(

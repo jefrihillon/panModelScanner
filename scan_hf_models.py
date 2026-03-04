@@ -9,27 +9,128 @@ client = ModelSecurityAPIClient(
     base_url="https://api.sase.paloaltonetworks.com/aims"
 )
 
-tag = input("Enter the Hugging Face task type: ").lower()
-author = input("Enter the Hugging Face author: ").lower()
-limit = input("Enter the number of models to retrieve (optional): ")
-limit = int(limit) if limit.isdigit() else None
+def scan_hf_model(model, security_group_uuid):
+    """Scan a single Hugging Face model for security vulnerabilities"""
+    try:
+        model_version = api.model_info(model.modelId).sha
+        result = client.scan(
+                security_group_uuid=security_group_uuid,
+                model_uri=HF_URI + model.modelId,
+                model_version=model_version,
+                labels={ "env": "j5k-testGroup1" }
+        )
+        return f"{model.modelId} scan completed: {result.eval_outcome}"
+    except Exception as e:
+        return f"{model.modelId} scan failed: {str(e)}"
 
+def scan_specific_model(model_url, security_group_uuid):
+    """Scan a specific model by URL"""
+    try:
+        model_info = api.model_info(model_url.replace(HF_URI, ""))
+        return scan_hf_model(model_info, security_group_uuid)
+    except Exception as e:
+        return f"Failed to scan model: {str(e)}"
 
-# Filter for Automatic Speech Recognition models by OpenAI
-models = list(api.list_models(
-        pipeline_tag=tag,
-        author=author,
-        limit=limit
-))
+def scan_models_by_criteria(tag=None, author=None, model_name=None, search=None,
+                           trained_dataset=None, library=None, language=None,
+                           tags=None, limit=None, sort=None, direction=None,
+                           security_group_uuid="715dab90-31ad-44f6-9fe2-dcef4335ec35"):
+    """Scan models based on various criteria from the Hugging Face API"""
+    try:
+        # Prepare filter parameters, only include non-None values
+        filter_params = {}
 
-print(f"Total models found: {len(models)}")
-for model in models:
-    print(HF_URI+model.modelId)
+        if tag:
+            filter_params['pipeline_tag'] = tag
+        if author:
+            filter_params['author'] = author
+        if model_name:
+            filter_params['model_name'] = model_name
+        if search:
+            filter_params['search'] = search
+        if trained_dataset:
+            filter_params['trained_dataset'] = trained_dataset
+        if library:
+            filter_params['library'] = library
+        if language:
+            filter_params['language'] = language
+        if tags:
+            filter_params['tags'] = tags
+        if limit:
+            filter_params['limit'] = limit
+        if sort:
+            filter_params['sort'] = sort
+        if direction:
+            filter_params['direction'] = direction
 
-    result = client.scan(
-            security_group_uuid="44f4e8b4-19e4-4a2f-bff1-b9cff232ed1e",
-            model_uri=HF_URI + model.modelId,
-            labels={ "env": "j5k-testGroup1" }
-    )
+        # Filter models based on criteria
+        models = list(api.list_models(**filter_params))
 
-    print(f"{model.modelId} scan completed: {result.eval_outcome}")
+        results = []
+        for model in models:
+            result = scan_hf_model(model, security_group_uuid)
+            results.append(result)
+
+        return results
+    except Exception as e:
+        return [f"Failed to scan models: {str(e)}"]
+
+def run_scan():
+    """Run the interactive command-line scanner"""
+    security_group_uuid = input("Enter security group UUID (mandatory): ").strip()
+    if not security_group_uuid:
+        print("Security group UUID is required.")
+        return
+
+    model_url = input("If you have a specific Hugging Face model in mind, enter the full URL here (optional): ")
+    if model_url:
+        print(scan_specific_model(model_url, security_group_uuid))
+    else:
+        print("Enter search criteria (leave blank for no filter):")
+        tag = input("Task Type (pipeline_tag): ").strip()
+        author = input("Author: ").strip()
+        model_name = input("Model Name: ").strip()
+        search = input("General Search Term: ").strip()
+        trained_dataset = input("Trained Dataset: ").strip()
+        library = input("Library: ").strip()
+        language = input("Language: ").strip()
+        tags = input("Tags (comma-separated): ").strip()
+
+        limit_str = input("Number of Models (optional): ").strip()
+        limit = None
+        if limit_str and limit_str.isdigit():
+            limit = int(limit_str)
+
+        # Only include non-empty parameters
+        params = {}
+        if tag:
+            params['tag'] = tag
+        if author:
+            params['author'] = author
+        if model_name:
+            params['model_name'] = model_name
+        if search:
+            params['search'] = search
+        if trained_dataset:
+            params['trained_dataset'] = trained_dataset
+        if library:
+            params['library'] = library
+        if language:
+            params['language'] = language
+        if tags:
+            params['tags'] = tags
+        if limit:
+            params['limit'] = limit
+
+        # Add security_group_uuid to params
+        params['security_group_uuid'] = security_group_uuid
+
+        if not params:
+            print("No search criteria provided. Scanning popular models...")
+
+        results = scan_models_by_criteria(**params)
+        for result in results:
+            print(result)
+
+if __name__ == "__main__":
+    run_scan()

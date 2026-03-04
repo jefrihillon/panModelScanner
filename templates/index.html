@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hugging Face Model Security Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hugging Face Model Security Scanner</h1>
+
+        <!-- Security Group UUID Input -->
+        <div class="form-section">
+            <h2>Security Configuration</h2>
+            <div class="form-group">
+                <label for="security_group_uuid">Security Group UUID (Required):</label>
+                <input type="text" id="security_group_uuid" name="security_group_uuid" placeholder="Enter your security group UUID" required>
+                <small>This UUID determines which models will be scanned based on your security group settings</small>
+            </div>
+        </div>
+
+        <!-- Specific Model Scan Section -->
+        <div class="form-section">
+            <h2>Scan Specific Model</h2>
+            <form id="specific-model-form">
+                <div class="form-group">
+                    <label for="model_url">Hugging Face Model URL:</label>
+                    <input type="text" id="model_url" name="model_url" placeholder="https://huggingface.co/username/model-name">
+                </div>
+                <button type="submit">Scan Model</button>
+            </form>
+        </div>
+
+        <!-- Criteria-based Scan Section -->
+        <div class="form-section">
+            <h2>Scan Models by Criteria</h2>
+            <form id="criteria-form">
+                <div class="form-group">
+                    <label for="tag">Task Type (pipeline_tag):</label>
+                    <input type="text" id="tag" name="tag" placeholder="e.g., text-classification, image-classification">
+                    <small>Leave empty to scan all task types</small>
+                </div>
+                <div class="form-group">
+                    <label for="author">Author:</label>
+                    <input type="text" id="author" name="author" placeholder="e.g., microsoft, google">
+                    <small>Leave empty to scan all authors</small>
+                </div>
+                <div class="form-group">
+                    <label for="model_name">Model Name:</label>
+                    <input type="text" id="model_name" name="model_name" placeholder="e.g., bert-base">
+                    <small>Specific model name to search for</small>
+                </div>
+                <div class="form-group">
+                    <label for="search">General Search Term:</label>
+                    <input type="text" id="search" name="search" placeholder="e.g., sentiment">
+                    <small>General search across all model fields</small>
+                </div>
+                <div class="form-group">
+                    <label for="trained_dataset">Trained Dataset:</label>
+                    <input type="text" id="trained_dataset" name="trained_dataset" placeholder="e.g., glue">
+                    <small>Dataset the model was trained on</small>
+                </div>
+                <div class="form-group">
+                    <label for="library">Library:</label>
+                    <input type="text" id="library" name="library" placeholder="e.g., transformers, pytorch">
+                    <small>Foundational library used</small>
+                </div>
+                <div class="form-group">
+                    <label for="language">Language:</label>
+                    <input type="text" id="language" name="language" placeholder="e.g., en, fr">
+                    <small>Language supported by the model</small>
+                </div>
+                <div class="form-group">
+                    <label for="tags">Tags (comma-separated):</label>
+                    <input type="text" id="tags" name="tags" placeholder="e.g., bert, finetuned">
+                    <small>Additional tags to filter by</small>
+                </div>
+                <div class="form-group">
+                    <label for="limit">Number of Models (optional):</label>
+                    <input type="number" id="limit" name="limit" placeholder="e.g., 10" min="1">
+                    <small>Maximum number of models to return</small>
+                </div>
+                <div class="form-group">
+                    <label for="sort">Sort By:</label>
+                    <select id="sort" name="sort">
+                        <option value="">Default (Relevance)</option>
+                        <option value="last_modified">Last Modified</option>
+                        <option value="downloads">Downloads</option>
+                        <option value="likes">Likes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="direction">Sort Direction:</label>
+                    <select id="direction" name="direction">
+                        <option value="">Default</option>
+                        <option value="desc">Descending</option>
+                        <option value="asc">Ascending</option>
+                    </select>
+                </div>
+                <button type="submit">Scan Models</button>
+            </form>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Scanning models, please wait...</p>
+        </div>
+
+        <!-- Results Display -->
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        // Handle specific model scan form submission
+        document.getElementById('specific-model-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const modelUrl = formData.get('model_url');
+            const securityGroupUuid = document.getElementById('security_group_uuid').value;
+
+            if (!securityGroupUuid) {
+                showResult('Security Group UUID is required', 'error');
+                return;
+            }
+
+            if (!modelUrl) {
+                showResult('Please enter a model URL', 'error');
+                return;
+            }
+
+            // Add security group UUID to form data
+            formData.append('security_group_uuid', securityGroupUuid);
+
+            showLoading(true);
+
+            fetch('/scan_specific', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                showLoading(false);
+                if (data.error) {
+                    showResult(`Error: ${data.error}`, 'error');
+                } else if (data.status === 'success') {
+                    showResult(`Scan completed for ${data.model_id}: ${data.scan_result}`, 'success');
+                } else {
+                    showResult(`Error scanning ${data.model_id}: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                showLoading(false);
+                showResult(`Network error: ${error.message}`, 'error');
+            });
+        });
+
+        // Handle criteria-based scan form submission
+        document.getElementById('criteria-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const tag = formData.get('tag');
+            const author = formData.get('author');
+            const securityGroupUuid = document.getElementById('security_group_uuid').value;
+
+            if (!securityGroupUuid) {
+                showResult('Security Group UUID is required', 'error');
+                return;
+            }
+
+            if (!tag && !author) {
+                showResult('At least one of Task Type or Author is required', 'error');
+                return;
+            }
+
+            // Add security group UUID to form data
+            formData.append('security_group_uuid', securityGroupUuid);
+
+            showLoading(true);
+
+            fetch('/scan_by_criteria', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                showLoading(false);
+                if (data.error) {
+                    showResult(`Error: ${data.error}`, 'error');
+                } else {
+                    let resultText = `Scanned ${data.models_scanned} models:\n\n`;
+                    data.results.forEach(result => {
+                        if (result.status === 'success') {
+                            resultText += `${result.model_id}: ${result.scan_result}\n`;
+                        } else {
+                            resultText += `${result.model_id}: Error - ${result.error}\n`;
+                        }
+                    });
+                    showResult(resultText, 'success');
+                }
+            })
+            .catch(error => {
+                showLoading(false);
+                showResult(`Network error: ${error.message}`, 'error');
+            });
+        });
+
+        // Show loading indicator
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        // Show result message
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${type}`;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
