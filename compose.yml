@@ -5,9 +5,7 @@ services:
     build: .
     ports:
       - "5000:5000"
-    environment:
-      - MODEL_SECURITY_CLIENT_ID=${MODEL_SECURITY_CLIENT_ID}
-      - MODEL_SECURITY_CLIENT_SECRET=${MODEL_SECURITY_CLIENT_SECRET}
-      - TSG_ID=${TSG_ID}
+    env_file:
+      - .env
     volumes:
       - .:/app

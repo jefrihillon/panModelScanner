@@ -56,20 +56,21 @@ The application supports the following search criteria for finding models:
    ```
 
 ### Option 3: Using Environment File
-1. Copy the example environment file:
+1. Create an .env file with your actual values:
    ```bash
-   cp .env.example .env
+   # Update the values in .env file
+   MODEL_SECURITY_CLIENT_ID="your_client_id"
+   MODEL_SECURITY_CLIENT_SECRET="your_client_secret"
+   TSG_ID="your_tsg_id"
    ```
 
-2. Edit .env with your actual values
-
-3. Source the environment file:
+2. Source the environment file:
    ```bash
    source .env
    ```
 
 ### Option 4: Docker Installation
-With Docker installed, you can build and run the application using either the Dockerfile directly or docker-compose.  Simply update the key environment variables in Dockerfile and run 'docker compose up -d'.
+With Docker installed, you can build and run the application using either the Dockerfile directly or docker-compose. The Dockerfile expects to find a .env file with the required environment variables configured with your specific credentials. Make sure to update the .env file with your actual credentials before running the Docker containers.
 
 ## Usage
 
@@ -104,27 +105,31 @@ python main.py --cli
 When running the CLI, you'll be prompted to enter a Security Group UUID before proceeding with the scan.
 
 ### Docker Execution
-1. Build and run with Docker:
+1. Update the .env file with your actual MODEL_SECURITY_CLIENT_ID, MODEL_SECURITY_CLIENT_SECRET, and TSG_ID values
+
+2. Build and run with Docker:
    ```bash
    docker build -t hf-model-scanner .
-   docker run -p 5000:5000 -e MODEL_SECURITY_CLIENT_ID="your_client_id" -e MODEL_SECURITY_CLIENT_SECRET="your_client_secret" -e TSG_ID="your_tsg_id" hf-model-scanner
+   docker run -p 5000:5000 --env-file .env hf-model-scanner
    ```
 
-2. Open your browser and navigate to `http://localhost:5000`
+3. Open your browser and navigate to `http://localhost:5000`
 
-3. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
+4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
 
 ### Docker Compose Execution
-1. Run with docker-compose:
+1. Update the .env file with your actual MODEL_SECURITY_CLIENT_ID, MODEL_SECURITY_CLIENT_SECRET, and TSG_ID values
+
+2. Run with docker-compose:
    ```bash
    docker-compose up -d
    ```
 
-2. Open your browser and navigate to `http://localhost:5000`
+3. Open your browser and navigate to `http://localhost:5000`
 
-3. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
+4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
 
-Note: The Docker image has default environment variables set, but you can override them by setting them in your shell before running docker-compose, or by modifying the compose.yml file.
+Note: The Docker image now loads environment variables from the .env file, so you can modify your credentials there instead of setting them as environment variables in your shell.
 
 ## How It Works
 

@@ -24,13 +24,12 @@ RUN chmod +x model_scan.sh
 # Expose port 5000
 EXPOSE 5000
 
-ENV MODEL_SECURITY_CLIENT_ID=""
-ENV MODEL_SECURITY_CLIENT_SECRET=""
-ENV TSG_ID=""
-ENV MODEL_SECURITY_API_ENDPOINT="https://api.sase.paloaltonetworks.com/aims"
+# Copy the env file
+COPY .env .env
 
-# Grab an auth token via the ./model_scan.sh script and install the model-security-client package
-RUN ./model_scan.sh | xargs -I {} pip install "model-security-client[all]" --extra-index-url {}
+# Load environment variables from .env and run model_scan.sh with secrets
+RUN export $(cat .env | xargs) && \
+    ./model_scan.sh | xargs -I {} pip install "model-security-client[all]" --extra-index-url {}
 
 # Launch the web server
 CMD ["python", "web_app.py"]
