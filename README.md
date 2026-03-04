@@ -69,7 +69,7 @@ The application supports the following search criteria for finding models:
    ```
 
 ### Option 4: Docker Installation
-With Docker installed, you can build and run the application using either the Dockerfile directly or docker-compose.
+With Docker installed, you can build and run the application using either the Dockerfile directly or docker-compose.  Simply update the key environment variables in Dockerfile and run 'docker compose up -d'.
 
 ## Usage
 
