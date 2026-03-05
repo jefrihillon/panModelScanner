@@ -1,4 +1,4 @@
-# Hugging Face Model Security Scanner
+# PAN Model Security Scanner UI
 
 This application provides a web interface for scanning Hugging Face models, Local Models, or Object Storage for security vulnerabilities using the Palo Alto Networks Model Security API. Users must provide a security group UUID to specify which models to scan based on their security group settings.
 
