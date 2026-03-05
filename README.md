@@ -155,8 +155,6 @@ Note: During the build process, BuildKit secrets are used to authenticate with t
 
 4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
 
-Note: During the build process, BuildKit secrets are used to authenticate with the model security service, but these secrets are NOT stored in the final image. Runtime environment variables are provided separately via the env_file directive in compose.yml.
-
 ## How It Works
 
 The application uses the Hugging Face Hub API to discover models and the Palo Alto Networks Model Security API to scan them for potential security issues.
