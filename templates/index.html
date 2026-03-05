@@ -163,14 +163,14 @@
 
         <!-- Main Content Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Specific Model Scan Card -->
+            <!-- Hugging Face Model Scan Card -->
             <div class="card bg-white rounded-xl p-6 fade-in">
                 <div class="flex items-center mb-4 section-divider">
                     <i class="fas fa-search text-palo-orange text-xl mr-3"></i>
-                    <h2 class="text-2xl font-semibold text-palo-dark">Scan Specific Model</h2>
+                    <h2 class="text-2xl font-semibold text-palo-dark">Scan Hugging Face Model</h2>
                 </div>
 
-                <form id="specific-model-form" class="space-y-6">
+                <form id="hf-model-form" class="space-y-6">
                     <div>
                         <label for="model_url" class="block text-sm font-medium text-gray-700 mb-2">
                             Hugging Face Model URL
@@ -184,6 +184,118 @@
 
                     <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium hover:shadow-lg transition-all duration-300">
                         <i class="fas fa-bolt mr-2"></i> Scan Model
+                    </button>
+                </form>
+            </div>
+
+            <!-- Local Model Scan Card -->
+            <div class="card bg-white rounded-xl p-6 fade-in">
+                <div class="flex items-center mb-4 section-divider">
+                    <i class="fas fa-desktop text-palo-orange text-xl mr-3"></i>
+                    <h2 class="text-2xl font-semibold text-palo-dark">Scan Local Model</h2>
+                </div>
+
+                <form id="local-model-form" class="space-y-4">
+                    <div>
+                        <label for="local_model_file" class="block text-sm font-medium text-gray-700 mb-2">
+                            Upload Model Files
+                        </label>
+                        <input type="file"
+                               id="local_model_file"
+                               name="local_model_file"
+                               multiple
+                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        <p class="mt-1 text-xs text-gray-500">Select model files from your local system</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="local_model_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                Model Name
+                            </label>
+                            <input type="text"
+                                   id="local_model_name"
+                                   name="local_model_name"
+                                   placeholder="e.g., my-custom-model"
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label for="local_model_version" class="block text-sm font-medium text-gray-700 mb-2">
+                                Model Version
+                            </label>
+                            <input type="text"
+                                   id="local_model_version"
+                                   name="local_model_version"
+                                   placeholder="e.g., v1.0"
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium hover:shadow-lg transition-all duration-300">
+                        <i class="fas fa-upload mr-2"></i> Scan Local Model
+                    </button>
+                </form>
+            </div>
+
+            <!-- Object Storage Model Scan Card -->
+            <div class="card bg-white rounded-xl p-6 fade-in">
+                <div class="flex items-center mb-4 section-divider">
+                    <i class="fas fa-cloud text-palo-orange text-xl mr-3"></i>
+                    <h2 class="text-2xl font-semibold text-palo-dark">Scan Object Storage Model</h2>
+                </div>
+
+                <form id="object-storage-form" class="space-y-4">
+                    <div>
+                        <label for="storage_uri" class="block text-sm font-medium text-gray-700 mb-2">
+                            Object Storage URI
+                        </label>
+                        <input type="text"
+                               id="storage_uri"
+                               name="storage_uri"
+                               placeholder="e.g., s3://bucket/path, gs://bucket/path, https://..."
+                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        <p class="mt-1 text-xs text-gray-500">Supported: S3, GCS, Azure Blob Storage, HTTPS</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="storage_model_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                Model Name
+                            </label>
+                            <input type="text"
+                                   id="storage_model_name"
+                                   name="storage_model_name"
+                                   placeholder="e.g., cloud-model"
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label for="storage_model_version" class="block text-sm font-medium text-gray-700 mb-2">
+                                Model Version
+                            </label>
+                            <input type="text"
+                                   id="storage_model_version"
+                                   name="storage_model_version"
+                                   placeholder="e.g., v1.0"
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="temp_download_path" class="block text-sm font-medium text-gray-700 mb-2">
+                            Temporary Download Path
+                        </label>
+                        <input type="text"
+                               id="temp_download_path"
+                               name="temp_download_path"
+                               placeholder="/tmp/models"
+                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        <p class="mt-1 text-xs text-gray-500">Local path for temporary model download</p>
+                    </div>
+
+                    <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium hover:shadow-lg transition-all duration-300">
+                        <i class="fas fa-cloud-download-alt mr-2"></i> Scan Storage Model
                     </button>
                 </form>
             </div>
@@ -361,8 +473,8 @@
     </footer>
 
     <script>
-        // Handle specific model scan form submission
-        document.getElementById('specific-model-form').addEventListener('submit', function(e) {
+        // Handle Hugging Face model scan form submission
+        document.getElementById('hf-model-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const formData = new FormData(this);
@@ -386,7 +498,7 @@
 
             showLoading(true);
 
-            fetch('/scan_specific', {
+            fetch('/scan_hf_model', {
                 method: 'POST',
                 body: formData
             })
@@ -399,6 +511,103 @@
                     showResult(`Scan completed for ${data.model_id}: ${data.scan_result}`, 'success');
                 } else {
                     showResult(`Error scanning ${data.model_id}: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                showLoading(false);
+                showResult(`Network error: ${error.message}`, 'error');
+            });
+        });
+
+        // Handle local model scan form submission
+        document.getElementById('local-model-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const securityGroupUuid = document.getElementById('security_group_uuid').value;
+            const envLabel = document.getElementById('env_label').value || 'default';
+            const modelName = document.getElementById('local_model_name').value;
+            const modelVersion = document.getElementById('local_model_version').value;
+
+            if (!securityGroupUuid) {
+                showResult('Security Group UUID is required', 'error');
+                return;
+            }
+
+            // Add security group UUID and env label to form data
+            formData.append('security_group_uuid', securityGroupUuid);
+            formData.append('env_label', envLabel);
+            formData.append('model_name', modelName);
+            formData.append('model_version', modelVersion);
+
+            showLoading(true);
+
+            fetch('/scan_local_model', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                showLoading(false);
+                if (data.error) {
+                    showResult(`Error: ${data.error}`, 'error');
+                } else if (data.status === 'success') {
+                    showResult(`Local model scan completed: ${data.scan_result}`, 'success');
+                } else {
+                    showResult(`Error scanning local model: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                showLoading(false);
+                showResult(`Network error: ${error.message}`, 'error');
+            });
+        });
+
+        // Handle object storage model scan form submission
+        document.getElementById('object-storage-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const securityGroupUuid = document.getElementById('security_group_uuid').value;
+            const envLabel = document.getElementById('env_label').value || 'default';
+            const storageUri = document.getElementById('storage_uri').value;
+            const modelName = document.getElementById('storage_model_name').value;
+            const modelVersion = document.getElementById('storage_model_version').value;
+            const tempPath = document.getElementById('temp_download_path').value;
+
+            if (!securityGroupUuid) {
+                showResult('Security Group UUID is required', 'error');
+                return;
+            }
+
+            if (!storageUri) {
+                showResult('Please enter an object storage URI', 'error');
+                return;
+            }
+
+            // Add security group UUID and env label to form data
+            formData.append('security_group_uuid', securityGroupUuid);
+            formData.append('env_label', envLabel);
+            formData.append('storage_uri', storageUri);
+            formData.append('model_name', modelName);
+            formData.append('model_version', modelVersion);
+            formData.append('temp_path', tempPath);
+
+            showLoading(true);
+
+            fetch('/scan_storage_model', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                showLoading(false);
+                if (data.error) {
+                    showResult(`Error: ${data.error}`, 'error');
+                } else if (data.status === 'success') {
+                    showResult(`Storage model scan completed: ${data.scan_result}`, 'success');
+                } else {
+                    showResult(`Error scanning storage model: ${data.error}`, 'error');
                 }
             })
             .catch(error => {

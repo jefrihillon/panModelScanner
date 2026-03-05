@@ -13,8 +13,8 @@ def index():
     """Render the main page with the scanning form"""
     return render_template('index.html')
 
-@app.route('/scan_specific', methods=['POST'])
-def scan_specific_web():
+@app.route('/scan_hf_model', methods=['POST'])
+def scan_hf_model_web():
     """Scan a specific Hugging Face model"""
     model_url = request.form.get('model_url')
     security_group_uuid = request.form.get('security_group_uuid')
@@ -45,6 +45,111 @@ def scan_specific_web():
             error = parts[1]
             return jsonify({
                 "model_id": model_id,
+                "error": error,
+                "status": "error"
+            })
+        else:
+            return jsonify({
+                "result": result_text,
+                "status": "unknown"
+            })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/scan_local_model', methods=['POST'])
+def scan_local_model_web():
+    """Scan a local model file"""
+    security_group_uuid = request.form.get('security_group_uuid')
+    env_label = request.form.get('env_label', 'default')
+    model_name = request.form.get('model_name', '')
+    model_version = request.form.get('model_version', '')
+    model_file = request.files.get('local_model_file')
+
+    if not security_group_uuid:
+        return jsonify({"error": "Security Group UUID is required"}), 400
+
+    if not model_file:
+        return jsonify({"error": "Model file is required"}), 400
+
+    try:
+        # Save the uploaded file temporarily
+        import tempfile
+        import os
+        temp_dir = tempfile.mkdtemp()
+        temp_file_path = os.path.join(temp_dir, model_file.filename)
+        model_file.save(temp_file_path)
+
+        # Scan the local model
+        from scan_hf_models import scan_local_model
+        result_text = scan_local_model(temp_file_path, security_group_uuid, env_label, model_name, model_version)
+
+        # Clean up temporary file
+        os.remove(temp_file_path)
+        os.rmdir(temp_dir)
+
+        # Parse the result
+        if "scan completed:" in result_text:
+            parts = result_text.split(" scan completed: ")
+            scan_result = parts[1] if len(parts) > 1 else result_text
+            return jsonify({
+                "scan_result": scan_result,
+                "status": "success"
+            })
+        elif "scan failed:" in result_text:
+            parts = result_text.split(" scan failed: ")
+            error = parts[1] if len(parts) > 1 else result_text
+            return jsonify({
+                "error": error,
+                "status": "error"
+            })
+        else:
+            return jsonify({
+                "result": result_text,
+                "status": "unknown"
+            })
+    except Exception as e:
+        # Clean up temporary files even if there's an error
+        try:
+            if 'temp_dir' in locals():
+                import shutil
+                shutil.rmtree(temp_dir, ignore_errors=True)
+        except:
+            pass
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/scan_storage_model', methods=['POST'])
+def scan_storage_model_web():
+    """Scan a model from object storage"""
+    security_group_uuid = request.form.get('security_group_uuid')
+    env_label = request.form.get('env_label', 'default')
+    storage_uri = request.form.get('storage_uri')
+    model_name = request.form.get('model_name', '')
+    model_version = request.form.get('model_version', '')
+    temp_path = request.form.get('temp_path', '/tmp')
+
+    if not security_group_uuid:
+        return jsonify({"error": "Security Group UUID is required"}), 400
+
+    if not storage_uri:
+        return jsonify({"error": "Storage URI is required"}), 400
+
+    try:
+        # Scan the storage model
+        from scan_hf_models import scan_storage_model
+        result_text = scan_storage_model(storage_uri, security_group_uuid, env_label, model_name, model_version, temp_path)
+
+        # Parse the result
+        if "scan completed:" in result_text:
+            parts = result_text.split(" scan completed: ")
+            scan_result = parts[1] if len(parts) > 1 else result_text
+            return jsonify({
+                "scan_result": scan_result,
+                "status": "success"
+            })
+        elif "scan failed:" in result_text:
+            parts = result_text.split(" scan failed: ")
+            error = parts[1] if len(parts) > 1 else result_text
+            return jsonify({
                 "error": error,
                 "status": "error"
             })
