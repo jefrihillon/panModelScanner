@@ -140,13 +140,6 @@ Note: During the build process, BuildKit secrets are used to authenticate with t
    ```
 
 2. Run with docker-compose:
-   ```bash
-   # Enable BuildKit
-   export DOCKER_BUILDKIT=1
-
-   # Build with secrets (credentials are NOT stored in the image)
-   docker-compose build
-
    # Run with environment variables
    docker-compose up -d
    ```
