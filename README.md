@@ -10,6 +10,18 @@ This application provides a web interface for scanning Hugging Face models, Loca
 
 Please see AI Model Scanning documentation at: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security
 
+### Scanning Methods
+
+1. **Hugging Face Models**: Scan models directly from Hugging Face Hub using URLs or search criteria
+2. **Local Models**: Upload model files directly through the web interface for scanning
+3. **Object Storage Models**: Scan models stored in cloud storage services (S3, GCS, Azure, HTTPS)
+
+Each scanning method supports custom model metadata (name, version) and environment labeling for better organization and tracking.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/organize-security-scans-with-custom-labels
+
+## How It Works
+
+The application uses the Hugging Face Hub API, local model storage and/or public block storage to discover models. The Palo Alto Networks Model Security API scans them for potential security issues.
+
 ## Features
 
 - Scan specific Hugging Face models by URL
@@ -34,9 +46,41 @@ The application supports the following search criteria for finding models:
 - **Sort Options**: Sort by relevance, last modified, downloads, or likes
 - **Sort Direction**: Ascending or descending order
 
+The web interface collects user input through HTML forms and displays the scan results in an easy-to-read format. Users must provide a Security Group UUID which determines which models will be scanned based on their security group settings.
+
 ## Installation
 
-### Option 1: Manual Installation
+## Kubernetes Deployment (Recommended)
+
+To deploy the application to a Kubernetes cluster:
+
+1. Ensure you have kubectl configured to access your cluster
+
+2. Update a Kubernetes deployment or pod yaml file with your environment model scanner environment variables:
+   The deployment file includes environment variables for:
+   - MODEL_SECURITY_CLIENT_ID
+   - MODEL_SECURITY_CLIENT_SECRET
+   - TSG_ID
+
+   Create a `deployment.yaml` or `pod.yaml` file to pull the image: jefrihillon/pan-model-scanner-ui:latest and within the pod spec for the image add the environment variables for your specific model scanner credentials:
+   ```yaml
+   env:
+   - name: MODEL_SECURITY_CLIENT_ID
+     value: "your_client_id_here"
+   - name: MODEL_SECURITY_CLIENT_SECRET
+     value: "your_client_secret_here"
+   - name: TSG_ID
+     value: "your_tsg_id_here"
+   ```
+
+3. Apply the Kubernetes manifest(s):
+   ```bash
+   kubectl apply -f deployment.yaml service.yaml ...
+   ```
+
+Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them in the deployment file.
+
+### Option 2: Manual Installation
 1. Set up the required environment variables or create and source .env file:
    ```bash
    export MODEL_SECURITY_CLIENT_ID="your_client_id"
@@ -55,7 +99,7 @@ The application supports the following search criteria for finding models:
    uv pip install -r pyproject.toml
    ```
 
-### Option 2: Using Build Script
+### Option 3: Using Build Script
 1. Set up the required environment variables or create and source .env:
    ```bash
    export MODEL_SECURITY_CLIENT_ID="your_client_id"
@@ -68,10 +112,10 @@ The application supports the following search criteria for finding models:
    ./build.sh
    ```
 
-### Option 3: Docker Installation
-With Docker installed, you can build and run the application using either the Dockerfile directly or docker compose. The Dockerfile uses BuildKit secrets to securely handle environment variables during the build process, preventing credentials from being copied into the container image if you make your own changes to the code and want to republish it to a public repo (dockerhub i.e.). You can put your own environment variables into a .env file and use ./extract_secrets.sh to secure them where only root can view and lauch the app with a simple 'docker compose up -d'.
+### Option 4: Docker Installation
+With Docker installed, you can build and run the application using either the Dockerfile directly or docker compose. The Dockerfile uses BuildKit secrets to securely handle environment variables during the build process, preventing credentials from being copied into the container image if you make your own changes to the code and want to republish it to a public repo. You can put your own environment variables into a .env file and use ./extract_secrets.sh to secure them where only root can view and lauch the app with a simple 'docker compose up -d'.
 
-## Usage
+# Usage
 
 ### Direct Execution
 1. Run the web application:
@@ -103,7 +147,7 @@ python main.py --cli
 
 When running the CLI, you'll be prompted to enter a Security Group UUID before proceeding with the scan.
 
-### Docker Execution
+# Docker 
 1. Create individual secret files with your credentials:
    ```bash
    # You can either extract values from .env file:
@@ -135,7 +179,7 @@ When running the CLI, you'll be prompted to enter a Security Group UUID before p
 
 4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
 
-### Docker Compose Execution
+# Docker Compose
 1. Create individual secret files with your credentials:
    ```bash
    # You can either extract values from .env file:
@@ -148,63 +192,10 @@ When running the CLI, you'll be prompted to enter a Security Group UUID before p
    ```
 
 2. Run with docker-compose:
-   # Run with environment variables
+   ```
    docker-compose up -d
    ```
 
 3. Open your browser and navigate to `http://localhost:5000`
 
 4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
-
-### Kubernetes Deployment
-
-To deploy the application to a Kubernetes cluster:
-
-1. Ensure you have kubectl configured to access your cluster
-
-2. Update a Kubernetes deployment or pod yaml file with your environment model scanner environment variables:
-   The deployment file includes environment variables for:
-   - MODEL_SECURITY_CLIENT_ID
-   - MODEL_SECURITY_CLIENT_SECRET
-   - TSG_ID
-
-   Create a `deployment.yaml` or `pod.yaml` file to pull the image: jefrihillon/pan-model-scanner-ui and within the pod spec for the image add the environment variables for your specific model scanner credentials:
-   ```yaml
-   env:
-   - name: MODEL_SECURITY_CLIENT_ID
-     value: "your_client_id_here"
-   - name: MODEL_SECURITY_CLIENT_SECRET
-     value: "your_client_secret_here"
-   - name: TSG_ID
-     value: "your_tsg_id_here"
-   ```
-
-3. Apply the Kubernetes manifest(s):
-   ```bash
-   kubectl apply -f deployment.yaml service.yaml ...
-   ```
-
-Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them in the deployment file.
-
-## How It Works
-
-The application uses the Hugging Face Hub API to discover models and the Palo Alto Networks Model Security API to scan them for potential security issues.
-
-Key features include:
-- Scan specific Hugging Face models by URL
-- Scan multiple models using advanced search criteria from the Hugging Face API
-- Scan local model files uploaded directly through the web interface
-- Scan models stored in cloud object storage (S3, GCS, Azure Blob Storage, HTTPS)
-- User-friendly web interface with forms instead of command-line prompts
-- Mandatory Security Group UUID input to customize which models are scanned based on security group settings
-- Dark theme interface with Palo Alto Networks brand colors (#FA582D orange and #0047BA blue)
-
-The web interface collects user input through HTML forms and displays the scan results in an easy-to-read format. Users must provide a Security Group UUID which determines which models will be scanned based on their security group settings.
-
-### Scanning Methods
-
-1. **Hugging Face Models**: Scan models directly from Hugging Face Hub using URLs or search criteria
-2. **Local Models**: Upload model files directly through the web interface for scanning
-3. **Object Storage Models**: Scan models stored in cloud storage services (S3, GCS, Azure, HTTPS)
-
-Each scanning method supports custom model metadata (name, version) and environment labeling for better organization and tracking.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/organize-security-scans-with-custom-labels
