@@ -166,5 +166,84 @@ CLI prompts user for Security Group UUID
    docker compose up -d
    ```
 
+<<<<<<< HEAD
 ## Current Known Bugs
  - if hosting on a kubernetes server and have issued a certificate via cert-manager, scans still successfully run, but the output from the scan has an html bug.  You will still see your scan results in Strata Cloud Manager.
+=======
+3. Open your browser and navigate to `http://localhost:5000`
+
+4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
+
+### Docker Compose Execution
+1. Create individual secret files with your credentials:
+   ```bash
+   # You can either extract values from .env file:
+   ./extract_secrets.sh
+
+   # Or create the files manually:
+   echo "your_client_id" > id.txt
+   echo "your_client_secret" > secret.txt
+   echo "your_tsg_id" > tsg.txt
+   ```
+
+2. Run with docker-compose:
+   # Run with environment variables
+   docker-compose up -d
+   ```
+
+3. Open your browser and navigate to `http://localhost:5000`
+
+4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
+
+### Kubernetes Deployment
+
+To deploy the application to a Kubernetes cluster:
+
+1. Ensure you have kubectl configured to access your cluster
+
+2. Update a Kubernetes deployment or pod yaml file with your environment model scanner environment variables:
+   The deployment file includes environment variables for:
+   - MODEL_SECURITY_CLIENT_ID
+   - MODEL_SECURITY_CLIENT_SECRET
+   - TSG_ID
+
+   Create a `deployment.yaml` or `pod.yaml` file to pull the image: jefrihillon/pan-model-scanner-ui and within the pod spec for the image add the environment variables for your specific model scanner credentials:
+   ```yaml
+   env:
+   - name: MODEL_SECURITY_CLIENT_ID
+     value: "your_client_id_here"
+   - name: MODEL_SECURITY_CLIENT_SECRET
+     value: "your_client_secret_here"
+   - name: TSG_ID
+     value: "your_tsg_id_here"
+   ```
+
+3. Apply the Kubernetes manifest(s):
+   ```bash
+   kubectl apply -f deployment.yaml service.yaml ...
+   ```
+
+Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them in the deployment file.
+
+## How It Works
+
+The application uses the Hugging Face Hub API to discover models and the Palo Alto Networks Model Security API to scan them for potential security issues.
+
+Key features include:
+- Scan specific Hugging Face models by URL
+- Scan multiple models using advanced search criteria from the Hugging Face API
+- Scan local model files uploaded directly through the web interface
+- Scan models stored in cloud object storage (S3, GCS, Azure Blob Storage, HTTPS)
+- User-friendly web interface with forms instead of command-line prompts
+- Mandatory Security Group UUID input to customize which models are scanned based on security group settings
+
+The web interface collects user input through HTML forms and displays the scan results in an easy-to-read format. Users must provide a Security Group UUID which determines which models will be scanned based on their security group settings.
+
+### Scanning Methods
+
+1. **Hugging Face Models**: Scan models directly from Hugging Face Hub using URLs or search criteria
+2. **Local Models**: Upload model files directly through the web interface for scanning
+3. **Object Storage Models**: Scan models stored in cloud storage services (S3, GCS, Azure, HTTPS)
+
+Each scanning method supports custom model metadata (name, version) and environment labeling for better organization and tracking.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/organize-security-scans-with-custom-labels
+>>>>>>> 77c0487 (commit on main)
