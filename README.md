@@ -11,7 +11,6 @@ Please see AI Model Scanning documentation at: https://docs.paloaltonetworks.com
 - Scan local model files with direct upload capability
 - Scan models from cloud object storage (Amazon S3, Google Cloud Storage, Azure Blob Storage, HTTPS)
 - User-friendly web interface with forms instead of command-line prompts
-- Dark theme interface with Palo Alto Networks brand colors
 - Responsive design that works on desktop and mobile devices
 - Real-time feedback with loading indicators and success/error notifications
 
@@ -64,7 +63,7 @@ The application supports the following search criteria for finding models:
    ```
 
 ### Option 3: Docker Installation
-With Docker installed, you can build and run the application using either the Dockerfile directly or docker compose. The Dockerfile uses BuildKit secrets to securely handle environment variables during the build process, preventing credentials from being copied into the container image. You can put your own environment variables into a .env file and use ./extract_secrets.sh to secure them where only root can view and lauch the app with a simple 'docker compose up -d'.
+With Docker installed, you can build and run the application using either the Dockerfile directly or docker compose. The Dockerfile uses BuildKit secrets to securely handle environment variables during the build process, preventing credentials from being copied into the container image if you make your own changes to the code and want to republish it to a public repo (dockerhub i.e.). You can put your own environment variables into a .env file and use ./extract_secrets.sh to secure them where only root can view and lauch the app with a simple 'docker compose up -d'.
 
 ## Usage
 
@@ -115,22 +114,20 @@ When running the CLI, you'll be prompted to enter a Security Group UUID before p
    # Enable BuildKit (if docker version < 23.x.x)
    export DOCKER_BUILDKIT=1
 
-   # Build with secrets (credentials are NOT stored in the image)
+   # Build with secrets
    docker build -t hf-model-scanner \
      --secret id=id,src=id.txt \
      --secret id=secret,src=secret.txt \
      --secret id=tsg,src=tsg.txt \
      .
 
-   # Run with environment variables (these are needed at runtime)
+   # Run with environment variables (needed at runtime for your own TSG, CLIENT_ID, and CLIENT_SECRET)
    docker run -p 5000:5000 --env-file .env hf-model-scanner
    ```
 
 3. Open your browser and navigate to `http://localhost:5000`
 
 4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
-
-Note: During the build process, BuildKit secrets are used to authenticate with the model security service, but these secrets are NOT stored in the final image. Runtime environment variables are provided separately via the --env-file flag.
 
 ### Docker Compose Execution
 1. Create individual secret files with your credentials:
@@ -176,9 +173,9 @@ To deploy the application to a Kubernetes cluster:
      value: "your_tsg_id_here"
    ```
 
-3. Apply the Kubernetes manifests:
+3. Apply the Kubernetes manifest(s):
    ```bash
-   kubectl apply -f deployment.yaml
+   kubectl apply -f deployment.yaml service.yaml ...
    ```
 
 Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them in the deployment file.
