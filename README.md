@@ -191,7 +191,6 @@ Key features include:
 - Scan models stored in cloud object storage (S3, GCS, Azure Blob Storage, HTTPS)
 - User-friendly web interface with forms instead of command-line prompts
 - Mandatory Security Group UUID input to customize which models are scanned based on security group settings
-- Dark theme interface with Palo Alto Networks brand colors (#FA582D orange and #0047BA blue)
 
 The web interface collects user input through HTML forms and displays the scan results in an easy-to-read format. Users must provide a Security Group UUID which determines which models will be scanned based on their security group settings.
 
