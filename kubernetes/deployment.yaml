@@ -17,14 +17,14 @@ spec:
     spec:
       containers:
       - name: model-scanner
-        image: jefrihillon/panmodelscanner-model-scanner:latest
+        image: jefrihillon/pan-model-scanner-ui:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:
         - name: MODEL_SECURITY_CLIENT_ID
-          value: ""
+          value: "jef-model-scanner@1867591621.iam.panserviceaccount.com"
         - name: MODEL_SECURITY_CLIENT_SECRET
-          value: ""
+          value: "e8b7674a-a21e-483f-9cc1-89a4df47bcbc"
         - name: TSG_ID
-          value: ""
+          value: "1867591621"

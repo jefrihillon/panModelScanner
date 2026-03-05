@@ -159,18 +159,13 @@ To deploy the application to a Kubernetes cluster:
 
 1. Ensure you have kubectl configured to access your cluster
 
-2. Create the model-scanner namespace:
-   ```bash
-   kubectl create namespace model-scanner
-   ```
-
-3. Update the Kubernetes deployment file (`kubernetes/deployment.yaml`) with your environment variables:
+2. Update a Kubernetes deployment or pod yaml file with your environment model scanner environment variables:
    The deployment file includes environment variables for:
    - MODEL_SECURITY_CLIENT_ID
    - MODEL_SECURITY_CLIENT_SECRET
    - TSG_ID
 
-   Edit the `kubernetes/deployment.yaml` file and replace the empty values with your actual credentials:
+   Create a `deployment.yaml` or `pod.yaml` file to pull the image: jefrihillon/pan-model-scanner-ui and within the pod spec for the image add the environment variables for your specific model scanner credentials:
    ```yaml
    env:
    - name: MODEL_SECURITY_CLIENT_ID
@@ -181,20 +176,9 @@ To deploy the application to a Kubernetes cluster:
      value: "your_tsg_id_here"
    ```
 
-4. Apply the Kubernetes manifests:
+3. Apply the Kubernetes manifests:
    ```bash
-   kubectl apply -f kubernetes/all-in-one.yaml
-   ```
-
-5. Wait for the deployment to be ready:
-   ```bash
-   kubectl -n model-scanner get pods
-   ```
-
-6. Access the application:
-   Once deployed, the application will be accessible via the LoadBalancer service. You can get the external IP with:
-   ```bash
-   kubectl -n model-scanner get service model-scanner-service
+   kubectl apply -f deployment.yaml
    ```
 
 Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them in the deployment file.
