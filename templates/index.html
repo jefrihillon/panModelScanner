@@ -4,203 +4,361 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hugging Face Model Security Scanner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'palo-orange': '#FA582D',
+                        'palo-black': '#000000',
+                        'palo-dark': '#1a1a1a',
+                        'palo-gray': '#f8f9fa',
+                        'palo-light-gray': '#e9ecef'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            min-height: 100vh;
         }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+        .card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.02);
         }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
-        .form-section {
-            margin-bottom: 30px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FA582D 0%, #e04e25 100%);
+            transition: all 0.3s ease;
         }
-        .form-group {
-            margin-bottom: 15px;
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #e04e25 0%, #c2431d 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(250, 88, 45, 0.3);
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            transition: all 0.3s ease;
         }
-        input[type="text"], input[type="number"] {
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        .form-input:focus {
+            border-color: #FA582D;
+            box-shadow: 0 0 0 3px rgba(250, 88, 45, 0.2);
+        }
+
+        .section-divider {
+            position: relative;
+        }
+
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
+            height: 3px;
+            background: linear-gradient(90deg, #FA582D 0%, transparent 100%);
         }
-        button {
-            background-color: #3498db;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
+
+        .pulse {
+            animation: pulse 2s infinite;
         }
-        button:hover {
-            background-color: #2980b9;
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(250, 88, 45, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(250, 88, 45, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(250, 88, 45, 0);
+            }
         }
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 4px;
-            display: none;
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
         }
-        .success {
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-        .error {
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-        }
-        .loading {
-            display: none;
-            text-align: center;
-            margin-top: 10px;
-        }
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 2s linear infinite;
-            margin: 0 auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Hugging Face Model Security Scanner</h1>
-
-        <!-- Security Group UUID Input -->
-        <div class="form-section">
-            <h2>Security Configuration</h2>
-            <div class="form-group">
-                <label for="security_group_uuid">Security Group UUID (Required):</label>
-                <input type="text" id="security_group_uuid" name="security_group_uuid" placeholder="Enter your security group UUID" required>
-                <small>This UUID determines which models will be scanned based on your security group settings</small>
+<body class="bg-palo-gray">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <header class="text-center mb-12 fade-in">
+            <div class="flex items-center justify-center mb-4">
+                <div class="bg-palo-orange w-12 h-12 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-shield-alt text-white text-2xl"></i>
+                </div>
+                <h1 class="text-4xl font-bold text-palo-dark">Hugging Face Model Security Scanner</h1>
             </div>
-            <div class="form-group">
-                <label for="env_label">Environment Label (Optional):</label>
-                <input type="text" id="env_label" name="env_label" placeholder="Enter environment label i.e. production, staging, development, etc.">
-                <small>Custom label for the scan environment. If left blank, 'default' will be used.</small>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Secure your AI models with Palo Alto Networks Model Security API. Scan Hugging Face models for potential vulnerabilities.
+            </p>
+        </header>
+
+        <!-- Security Configuration -->
+        <div class="card bg-white rounded-xl p-6 mb-8 fade-in">
+            <div class="flex items-center mb-4 section-divider">
+                <i class="fas fa-lock text-palo-orange text-xl mr-3"></i>
+                <h2 class="text-2xl font-semibold text-palo-dark">Security Configuration</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="security_group_uuid" class="block text-sm font-medium text-gray-700 mb-2">
+                        Security Group UUID <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text"
+                           id="security_group_uuid"
+                           name="security_group_uuid"
+                           placeholder="Enter your security group UUID"
+                           required
+                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                    <p class="mt-2 text-sm text-gray-500">
+                        This UUID determines which models will be scanned based on your security group settings.
+                    </p>
+                </div>
+
+                <div>
+                    <label for="env_label" class="block text-sm font-medium text-gray-700 mb-2">
+                        Environment Label
+                    </label>
+                    <input type="text"
+                           id="env_label"
+                           name="env_label"
+                           placeholder="e.g., production, staging, development"
+                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                    <p class="mt-2 text-sm text-gray-500">
+                        Custom label for the scan environment. If left blank, 'default' will be used.
+                    </p>
+                </div>
             </div>
         </div>
 
-        <!-- Specific Model Scan Section -->
-        <div class="form-section">
-            <h2>Scan Specific Model</h2>
-            <form id="specific-model-form">
-                <div class="form-group">
-                    <label for="model_url">Hugging Face Model URL:</label>
-                    <input type="text" id="model_url" name="model_url" placeholder="https://huggingface.co/username/model-name">
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Specific Model Scan Card -->
+            <div class="card bg-white rounded-xl p-6 fade-in">
+                <div class="flex items-center mb-4 section-divider">
+                    <i class="fas fa-search text-palo-orange text-xl mr-3"></i>
+                    <h2 class="text-2xl font-semibold text-palo-dark">Scan Specific Model</h2>
                 </div>
-                <button type="submit">Scan Model</button>
-            </form>
-        </div>
 
-        <!-- Criteria-based Scan Section -->
-        <div class="form-section">
-            <h2>Scan Models by Criteria</h2>
-            <form id="criteria-form">
-                <div class="form-group">
-                    <label for="tag">Task Type (pipeline_tag):</label>
-                    <input type="text" id="tag" name="tag" placeholder="e.g., text-classification, image-classification">
-                    <small>Leave empty to scan all task types</small>
+                <form id="specific-model-form" class="space-y-6">
+                    <div>
+                        <label for="model_url" class="block text-sm font-medium text-gray-700 mb-2">
+                            Hugging Face Model URL
+                        </label>
+                        <input type="text"
+                               id="model_url"
+                               name="model_url"
+                               placeholder="https://huggingface.co/username/model-name"
+                               class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                    </div>
+
+                    <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium hover:shadow-lg transition-all duration-300">
+                        <i class="fas fa-bolt mr-2"></i> Scan Model
+                    </button>
+                </form>
+            </div>
+
+            <!-- Criteria-based Scan Card -->
+            <div class="card bg-white rounded-xl p-6 fade-in">
+                <div class="flex items-center mb-4 section-divider">
+                    <i class="fas fa-filter text-palo-orange text-xl mr-3"></i>
+                    <h2 class="text-2xl font-semibold text-palo-dark">Scan Models by Criteria</h2>
                 </div>
-                <div class="form-group">
-                    <label for="author">Author:</label>
-                    <input type="text" id="author" name="author" placeholder="e.g., microsoft, google">
-                    <small>Leave empty to scan all authors</small>
-                </div>
-                <div class="form-group">
-                    <label for="model_name">Model Name:</label>
-                    <input type="text" id="model_name" name="model_name" placeholder="e.g., bert-base">
-                    <small>Specific model name to search for</small>
-                </div>
-                <div class="form-group">
-                    <label for="search">General Search Term:</label>
-                    <input type="text" id="search" name="search" placeholder="e.g., sentiment">
-                    <small>General search across all model fields</small>
-                </div>
-                <div class="form-group">
-                    <label for="trained_dataset">Trained Dataset:</label>
-                    <input type="text" id="trained_dataset" name="trained_dataset" placeholder="e.g., glue">
-                    <small>Dataset the model was trained on</small>
-                </div>
-                <div class="form-group">
-                    <label for="library">Library:</label>
-                    <input type="text" id="library" name="library" placeholder="e.g., transformers, pytorch">
-                    <small>Foundational library used</small>
-                </div>
-                <div class="form-group">
-                    <label for="language">Language:</label>
-                    <input type="text" id="language" name="language" placeholder="e.g., en, fr">
-                    <small>Language supported by the model</small>
-                </div>
-                <div class="form-group">
-                    <label for="tags">Tags (comma-separated):</label>
-                    <input type="text" id="tags" name="tags" placeholder="e.g., bert, finetuned">
-                    <small>Additional tags to filter by</small>
-                </div>
-                <div class="form-group">
-                    <label for="limit">Number of Models (optional):</label>
-                    <input type="number" id="limit" name="limit" placeholder="e.g., 10" min="1">
-                    <small>Maximum number of models to return</small>
-                </div>
-                <div class="form-group">
-                    <label for="sort">Sort By:</label>
-                    <select id="sort" name="sort">
-                        <option value="">Default (Relevance)</option>
-                        <option value="last_modified">Last Modified</option>
-                        <option value="downloads">Downloads</option>
-                        <option value="likes">Likes</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="direction">Sort Direction:</label>
-                    <select id="direction" name="direction">
-                        <option value="">Default</option>
-                        <option value="desc">Descending</option>
-                        <option value="asc">Ascending</option>
-                    </select>
-                </div>
-                <button type="submit">Scan Models</button>
-            </form>
+
+                <form id="criteria-form" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="tag" class="block text-sm font-medium text-gray-700 mb-2">
+                                Task Type (pipeline_tag)
+                            </label>
+                            <input type="text"
+                                   id="tag"
+                                   name="tag"
+                                   placeholder="e.g., text-classification"
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                            <p class="mt-1 text-xs text-gray-500">Leave empty to scan all</p>
+                        </div>
+
+                        <div>
+                            <label for="author" class="block text-sm font-medium text-gray-700 mb-2">
+                                Author
+                            </label>
+                            <input type="text"
+                                   id="author"
+                                   name="author"
+                                   placeholder="e.g., microsoft, google"
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                            <p class="mt-1 text-xs text-gray-500">Leave empty to scan all</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="model_name" class="block text-sm font-medium text-gray-700 mb-2">
+                            Model Name
+                        </label>
+                        <input type="text"
+                               id="model_name"
+                               name="model_name"
+                               placeholder="e.g., bert-base"
+                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        <p class="mt-1 text-xs text-gray-500">Specific model name to search for</p>
+                    </div>
+
+                    <div>
+                        <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
+                            General Search Term
+                        </label>
+                        <input type="text"
+                               id="search"
+                               name="search"
+                               placeholder="e.g., sentiment"
+                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        <p class="mt-1 text-xs text-gray-500">Search across all model fields</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="trained_dataset" class="block text-sm font-medium text-gray-700 mb-2">
+                                Trained Dataset
+                            </label>
+                            <input type="text"
+                                   id="trained_dataset"
+                                   name="trained_dataset"
+                                   placeholder="e.g., glue"
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label for="library" class="block text-sm font-medium text-gray-700 mb-2">
+                                Library
+                            </label>
+                            <input type="text"
+                                   id="library"
+                                   name="library"
+                                   placeholder="e.g., transformers"
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="language" class="block text-sm font-medium text-gray-700 mb-2">
+                                Language
+                            </label>
+                            <input type="text"
+                                   id="language"
+                                   name="language"
+                                   placeholder="e.g., en, fr"
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
+                                Tags
+                            </label>
+                            <input type="text"
+                                   id="tags"
+                                   name="tags"
+                                   placeholder="e.g., bert, finetuned"
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="limit" class="block text-sm font-medium text-gray-700 mb-2">
+                                Number of Models
+                            </label>
+                            <input type="number"
+                                   id="limit"
+                                   name="limit"
+                                   placeholder="e.g., 10"
+                                   min="1"
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                            <p class="mt-1 text-xs text-gray-500">Maximum models to return</p>
+                        </div>
+
+                        <div>
+                            <label for="sort" class="block text-sm font-medium text-gray-700 mb-2">
+                                Sort By
+                            </label>
+                            <select id="sort"
+                                    name="sort"
+                                    class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                                <option value="">Default (Relevance)</option>
+                                <option value="last_modified">Last Modified</option>
+                                <option value="downloads">Downloads</option>
+                                <option value="likes">Likes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="direction" class="block text-sm font-medium text-gray-700 mb-2">
+                            Sort Direction
+                        </label>
+                        <select id="direction"
+                                name="direction"
+                                class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                            <option value="">Default</option>
+                            <option value="desc">Descending</option>
+                            <option value="asc">Ascending</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium hover:shadow-lg transition-all duration-300 mt-4">
+                        <i class="fas fa-search mr-2"></i> Scan Models
+                    </button>
+                </form>
+            </div>
         </div>
 
         <!-- Loading Indicator -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Scanning models, please wait...</p>
+        <div class="loading hidden text-center py-8 fade-in" id="loading">
+            <div class="inline-block">
+                <div class="w-16 h-16 border-4 border-palo-light-gray border-t-palo-orange rounded-full animate-spin mx-auto"></div>
+                <p class="mt-4 text-lg text-gray-700">Scanning models, please wait...</p>
+                <p class="text-sm text-gray-500 mt-2">This may take a few moments depending on the number of models</p>
+            </div>
         </div>
 
         <!-- Results Display -->
-        <div id="result" class="result"></div>
+        <div id="result" class="result hidden mt-8 p-6 rounded-xl card fade-in"></div>
     </div>
+
+    <footer class="text-center py-8 text-gray-600 text-sm">
+        <p>Powered by Palo Alto Networks Model Security API</p>
+    </footer>
 
     <script>
         // Handle specific model scan form submission
@@ -304,15 +462,28 @@
 
         // Show loading indicator
         function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('loading').classList.toggle('hidden', !show);
         }
 
         // Show result message
         function showResult(message, type) {
             const resultDiv = document.getElementById('result');
             resultDiv.textContent = message;
-            resultDiv.className = `result ${type}`;
-            resultDiv.style.display = 'block';
+
+            // Clear existing classes
+            resultDiv.className = 'mt-8 p-6 rounded-xl card fade-in ';
+
+            // Add appropriate classes based on type
+            if (type === 'success') {
+                resultDiv.classList.add('bg-green-50', 'border', 'border-green-200', 'text-green-800');
+            } else {
+                resultDiv.classList.add('bg-red-50', 'border', 'border-red-200', 'text-red-800');
+            }
+
+            resultDiv.classList.remove('hidden');
+
+            // Scroll to results
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     </script>
 </body>

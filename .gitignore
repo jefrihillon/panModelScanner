@@ -209,3 +209,4 @@ __marimo__/
 # Custom Stuff
 base_stuff/
 *.txt
+kubernetes/
