@@ -153,6 +153,52 @@ Note: During the build process, BuildKit secrets are used to authenticate with t
 
 4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
 
+### Kubernetes Deployment
+
+To deploy the application to a Kubernetes cluster:
+
+1. Ensure you have kubectl configured to access your cluster
+
+2. Create the model-scanner namespace:
+   ```bash
+   kubectl create namespace model-scanner
+   ```
+
+3. Update the Kubernetes deployment file (`kubernetes/deployment.yaml`) with your environment variables:
+   The deployment file includes environment variables for:
+   - MODEL_SECURITY_CLIENT_ID
+   - MODEL_SECURITY_CLIENT_SECRET
+   - TSG_ID
+
+   Edit the `kubernetes/deployment.yaml` file and replace the empty values with your actual credentials:
+   ```yaml
+   env:
+   - name: MODEL_SECURITY_CLIENT_ID
+     value: "your_client_id_here"
+   - name: MODEL_SECURITY_CLIENT_SECRET
+     value: "your_client_secret_here"
+   - name: TSG_ID
+     value: "your_tsg_id_here"
+   ```
+
+4. Apply the Kubernetes manifests:
+   ```bash
+   kubectl apply -f kubernetes/all-in-one.yaml
+   ```
+
+5. Wait for the deployment to be ready:
+   ```bash
+   kubectl -n model-scanner get pods
+   ```
+
+6. Access the application:
+   Once deployed, the application will be accessible via the LoadBalancer service. You can get the external IP with:
+   ```bash
+   kubectl -n model-scanner get service model-scanner-service
+   ```
+
+Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them in the deployment file.
+
 ## How It Works
 
 The application uses the Hugging Face Hub API to discover models and the Palo Alto Networks Model Security API to scan them for potential security issues.
