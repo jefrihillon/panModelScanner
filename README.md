@@ -59,7 +59,7 @@ The application supports the following search criteria for finding models:
    ```
 
 ### Option 3: Docker Installation
-With Docker installed, you can build and run the application using either the Dockerfile directly or docker compose. The Dockerfile uses BuildKit secrets to securely handle environment variables during the build process, preventing credentials from being copied into the container image. Make sure to have a .env file with your actual credentials before building the Docker image.
+With Docker installed, you can build and run the application using either the Dockerfile directly or docker compose. The Dockerfile uses BuildKit secrets to securely handle environment variables during the build process, preventing credentials from being copied into the container image. You can put your own environment variables into a .env file and use ./extract_secrets.sh to secure them where only root can view and lauch the app with a simple 'docker compose up -d'.
 
 ## Usage
 
