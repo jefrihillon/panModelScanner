@@ -1,6 +1,6 @@
 # Hugging Face Model Security Scanner
 
-This application provides a web interface for scanning Hugging Face models for security vulnerabilities using the Palo Alto Networks Model Security API. Users must provide a security group UUID to specify which models to scan based on their security group settings.
+This application provides a web interface for scanning Hugging Face models, Local Models, or Object Storage for security vulnerabilities using the Palo Alto Networks Model Security API. Users must provide a security group UUID to specify which models to scan based on their security group settings.
 
 Please see AI Model Scanning documentation at: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security
 
@@ -174,4 +174,4 @@ The web interface collects user input through HTML forms and displays the scan r
 2. **Local Models**: Upload model files directly through the web interface for scanning
 3. **Object Storage Models**: Scan models stored in cloud storage services (S3, GCS, Azure, HTTPS)
 
-Each scanning method supports custom model metadata (name, version) and environment labeling for better organization and tracking.
+Each scanning method supports custom model metadata (name, version) and environment labeling for better organization and tracking.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/organize-security-scans-with-custom-labels
