@@ -8,7 +8,12 @@ Please see AI Model Scanning documentation at: https://docs.paloaltonetworks.com
 
 - Scan specific Hugging Face models by URL
 - Scan multiple models using advanced search criteria from the Hugging Face API
+- Scan local model files with direct upload capability
+- Scan models from cloud object storage (Amazon S3, Google Cloud Storage, Azure Blob Storage, HTTPS)
 - User-friendly web interface with forms instead of command-line prompts
+- Dark theme interface with Palo Alto Networks brand colors
+- Responsive design that works on desktop and mobile devices
+- Real-time feedback with loading indicators and success/error notifications
 
 ## Advanced Search Criteria
 
@@ -155,7 +160,18 @@ The application uses the Hugging Face Hub API to discover models and the Palo Al
 Key features include:
 - Scan specific Hugging Face models by URL
 - Scan multiple models using advanced search criteria from the Hugging Face API
+- Scan local model files uploaded directly through the web interface
+- Scan models stored in cloud object storage (S3, GCS, Azure Blob Storage, HTTPS)
 - User-friendly web interface with forms instead of command-line prompts
 - Mandatory Security Group UUID input to customize which models are scanned based on security group settings
+- Dark theme interface with Palo Alto Networks brand colors (#FA582D orange and #0047BA blue)
 
 The web interface collects user input through HTML forms and displays the scan results in an easy-to-read format. Users must provide a Security Group UUID which determines which models will be scanned based on their security group settings.
+
+### Scanning Methods
+
+1. **Hugging Face Models**: Scan models directly from Hugging Face Hub using URLs or search criteria
+2. **Local Models**: Upload model files directly through the web interface for scanning
+3. **Object Storage Models**: Scan models stored in cloud storage services (S3, GCS, Azure, HTTPS)
+
+Each scanning method supports custom model metadata (name, version) and environment labeling for better organization and tracking.

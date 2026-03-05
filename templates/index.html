@@ -12,10 +12,11 @@
                 extend: {
                     colors: {
                         'palo-orange': '#FA582D',
-                        'palo-black': '#000000',
-                        'palo-dark': '#1a1a1a',
-                        'palo-gray': '#f8f9fa',
-                        'palo-light-gray': '#e9ecef'
+                        'palo-blue': '#0047BA', /* Official Palo Alto Networks blue */
+                        'palo-dark': '#0A1429',
+                        'palo-darker': '#050A14',
+                        'palo-card': '#151E35',
+                        'palo-input': '#1E293B'
                     }
                 }
             }
@@ -26,18 +27,22 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            background: linear-gradient(135deg, #0A1429 0%, #050A14 100%);
             min-height: 100vh;
+            color: #E2E8F0;
         }
 
         .card {
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 10px 15px rgba(0, 0, 0, 0.2);
+            background: #151E35;
+            border: 1px solid #2D3748;
         }
 
         .card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            border-color: #FA582D;
         }
 
         .btn-primary {
@@ -48,23 +53,30 @@
         .btn-primary:hover {
             background: linear-gradient(135deg, #e04e25 0%, #c2431d 100%);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(250, 88, 45, 0.3);
+            box-shadow: 0 4px 12px rgba(250, 88, 45, 0.4);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            background: linear-gradient(135deg, #0047BA 0%, #003A99 100%); /* Palo Alto Blue */
             transition: all 0.3s ease;
         }
 
         .btn-secondary:hover {
-            background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+            background: linear-gradient(135deg, #003A99 0%, #002D77 100%);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 71, 186, 0.4);
+        }
+
+        .form-input {
+            background-color: #1E293B;
+            border: 1px solid #2D3748;
+            color: #E2E8F0;
         }
 
         .form-input:focus {
             border-color: #FA582D;
-            box-shadow: 0 0 0 3px rgba(250, 88, 45, 0.2);
+            box-shadow: 0 0 0 3px rgba(250, 88, 45, 0.3);
+            outline: none;
         }
 
         .section-divider {
@@ -105,56 +117,83 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        header h1 {
+            background: linear-gradient(135deg, #FA582D 0%, #0047BA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .text-pop {
+            color: #FA582D;
+        }
+
+        .icon-pop {
+            color: #FA582D;
+        }
+
+        .input-label {
+            color: #CBD5E1;
+        }
+
+        .helper-text {
+            color: #94A3B8;
+        }
+
+        footer {
+            color: #64748B;
+        }
     </style>
 </head>
-<body class="bg-palo-gray">
+<body class="bg-palo-darker">
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <!-- Header -->
         <header class="text-center mb-12 fade-in">
             <div class="flex items-center justify-center mb-4">
-                <div class="bg-palo-orange w-12 h-12 rounded-lg flex items-center justify-center mr-4">
-                    <i class="fas fa-shield-alt text-white text-2xl"></i>
+                <div class="bg-palo-orange w-16 h-16 rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                    <i class="fas fa-shield-alt text-white text-3xl"></i>
                 </div>
-                <h1 class="text-4xl font-bold text-palo-dark">Hugging Face Model Security Scanner</h1>
+                <h1 class="text-4xl font-bold">Hugging Face Model Security Scanner</h1>
             </div>
-            <p class="text-gray-600 max-w-2xl mx-auto">
+            <p class="text-gray-300 max-w-2xl mx-auto text-lg">
                 Secure your AI models with Palo Alto Networks Model Security API. Scan Hugging Face models for potential vulnerabilities.
             </p>
         </header>
 
         <!-- Security Configuration -->
-        <div class="card bg-white rounded-xl p-6 mb-8 fade-in">
+        <div class="card bg-palo-card rounded-xl p-6 mb-8 fade-in border border-palo-input">
             <div class="flex items-center mb-4 section-divider">
-                <i class="fas fa-lock text-palo-orange text-xl mr-3"></i>
-                <h2 class="text-2xl font-semibold text-palo-dark">Security Configuration</h2>
+                <i class="fas fa-lock text-palo-orange text-2xl mr-3"></i>
+                <h2 class="text-2xl font-semibold text-white">Security Configuration</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label for="security_group_uuid" class="block text-sm font-medium text-gray-700 mb-2">
-                        Security Group UUID <span class="text-red-500">*</span>
+                    <label for="security_group_uuid" class="input-label block text-sm font-medium mb-2">
+                        Security Group UUID <span class="text-red-400">*</span>
                     </label>
                     <input type="text"
                            id="security_group_uuid"
                            name="security_group_uuid"
                            placeholder="Enter your security group UUID"
                            required
-                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                    <p class="mt-2 text-sm text-gray-500">
+                           class="form-input w-full px-4 py-3 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                    <p class="helper-text mt-2 text-sm">
                         This UUID determines which models will be scanned based on your security group settings.
                     </p>
                 </div>
 
                 <div>
-                    <label for="env_label" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="env_label" class="input-label block text-sm font-medium mb-2">
                         Environment Label
                     </label>
                     <input type="text"
                            id="env_label"
                            name="env_label"
                            placeholder="e.g., production, staging, development"
-                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                    <p class="mt-2 text-sm text-gray-500">
+                           class="form-input w-full px-4 py-3 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                    <p class="helper-text mt-2 text-sm">
                         Custom label for the scan environment. If left blank, 'default' will be used.
                     </p>
                 </div>
@@ -164,22 +203,22 @@
         <!-- Main Content Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Hugging Face Model Scan Card -->
-            <div class="card bg-white rounded-xl p-6 fade-in">
+            <div class="card bg-palo-card rounded-xl p-6 fade-in border border-palo-input">
                 <div class="flex items-center mb-4 section-divider">
-                    <i class="fas fa-search text-palo-orange text-xl mr-3"></i>
-                    <h2 class="text-2xl font-semibold text-palo-dark">Scan Hugging Face Model</h2>
+                    <i class="fas fa-search text-palo-orange text-2xl mr-3"></i>
+                    <h2 class="text-2xl font-semibold text-white">Scan Hugging Face Model</h2>
                 </div>
 
                 <form id="hf-model-form" class="space-y-6">
                     <div>
-                        <label for="model_url" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="model_url" class="input-label block text-sm font-medium mb-2">
                             Hugging Face Model URL
                         </label>
                         <input type="text"
                                id="model_url"
                                name="model_url"
                                placeholder="https://huggingface.co/username/model-name"
-                               class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                               class="form-input w-full px-4 py-3 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
                     </div>
 
                     <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium hover:shadow-lg transition-all duration-300">
@@ -189,46 +228,48 @@
             </div>
 
             <!-- Local Model Scan Card -->
-            <div class="card bg-white rounded-xl p-6 fade-in">
+            <div class="card bg-palo-card rounded-xl p-6 fade-in border border-palo-input">
                 <div class="flex items-center mb-4 section-divider">
-                    <i class="fas fa-desktop text-palo-orange text-xl mr-3"></i>
-                    <h2 class="text-2xl font-semibold text-palo-dark">Scan Local Model</h2>
+                    <i class="fas fa-desktop text-palo-orange text-2xl mr-3"></i>
+                    <h2 class="text-2xl font-semibold text-white">Scan Local Model</h2>
                 </div>
 
                 <form id="local-model-form" class="space-y-4">
                     <div>
-                        <label for="local_model_file" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="local_model_file" class="input-label block text-sm font-medium mb-2">
                             Upload Model Files
                         </label>
                         <input type="file"
                                id="local_model_file"
                                name="local_model_file"
                                multiple
-                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                        <p class="mt-1 text-xs text-gray-500">Select model files from your local system</p>
+                               class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        <p class="helper-text mt-1 text-xs">
+                            Select model files from your local system
+                        </p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="local_model_name" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="local_model_name" class="input-label block text-sm font-medium mb-2">
                                 Model Name
                             </label>
                             <input type="text"
                                    id="local_model_name"
                                    name="local_model_name"
                                    placeholder="e.g., my-custom-model"
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                                   class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
                         </div>
 
                         <div>
-                            <label for="local_model_version" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="local_model_version" class="input-label block text-sm font-medium mb-2">
                                 Model Version
                             </label>
                             <input type="text"
                                    id="local_model_version"
                                    name="local_model_version"
                                    placeholder="e.g., v1.0"
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                                   class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
                         </div>
                     </div>
 
@@ -239,59 +280,63 @@
             </div>
 
             <!-- Object Storage Model Scan Card -->
-            <div class="card bg-white rounded-xl p-6 fade-in">
+            <div class="card bg-palo-card rounded-xl p-6 fade-in border border-palo-input">
                 <div class="flex items-center mb-4 section-divider">
-                    <i class="fas fa-cloud text-palo-orange text-xl mr-3"></i>
-                    <h2 class="text-2xl font-semibold text-palo-dark">Scan Object Storage Model</h2>
+                    <i class="fas fa-cloud text-palo-orange text-2xl mr-3"></i>
+                    <h2 class="text-2xl font-semibold text-white">Scan Object Storage Model</h2>
                 </div>
 
                 <form id="object-storage-form" class="space-y-4">
                     <div>
-                        <label for="storage_uri" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="storage_uri" class="input-label block text-sm font-medium mb-2">
                             Object Storage URI
                         </label>
                         <input type="text"
                                id="storage_uri"
                                name="storage_uri"
                                placeholder="e.g., s3://bucket/path, gs://bucket/path, https://..."
-                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                        <p class="mt-1 text-xs text-gray-500">Supported: S3, GCS, Azure Blob Storage, HTTPS</p>
+                               class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        <p class="helper-text mt-1 text-xs">
+                            Supported: S3, GCS, Azure Blob Storage, HTTPS
+                        </p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="storage_model_name" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="storage_model_name" class="input-label block text-sm font-medium mb-2">
                                 Model Name
                             </label>
                             <input type="text"
                                    id="storage_model_name"
                                    name="storage_model_name"
                                    placeholder="e.g., cloud-model"
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                                   class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
                         </div>
 
                         <div>
-                            <label for="storage_model_version" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="storage_model_version" class="input-label block text-sm font-medium mb-2">
                                 Model Version
                             </label>
                             <input type="text"
                                    id="storage_model_version"
                                    name="storage_model_version"
                                    placeholder="e.g., v1.0"
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                                   class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
                         </div>
                     </div>
 
                     <div>
-                        <label for="temp_download_path" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="temp_download_path" class="input-label block text-sm font-medium mb-2">
                             Temporary Download Path
                         </label>
                         <input type="text"
                                id="temp_download_path"
                                name="temp_download_path"
                                placeholder="/tmp/models"
-                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                        <p class="mt-1 text-xs text-gray-500">Local path for temporary model download</p>
+                               class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        <p class="helper-text mt-1 text-xs">
+                            Local path for temporary model download
+                        </p>
                     </div>
 
                     <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium hover:shadow-lg transition-all duration-300">
@@ -301,114 +346,114 @@
             </div>
 
             <!-- Criteria-based Scan Card -->
-            <div class="card bg-white rounded-xl p-6 fade-in">
+            <div class="card bg-palo-card rounded-xl p-6 fade-in border border-palo-input">
                 <div class="flex items-center mb-4 section-divider">
-                    <i class="fas fa-filter text-palo-orange text-xl mr-3"></i>
-                    <h2 class="text-2xl font-semibold text-palo-dark">Scan Models by Criteria</h2>
+                    <i class="fas fa-filter text-palo-orange text-2xl mr-3"></i>
+                    <h2 class="text-2xl font-semibold text-white">Scan Models by Criteria</h2>
                 </div>
 
                 <form id="criteria-form" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="tag" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="tag" class="input-label block text-sm font-medium mb-2">
                                 Task Type (pipeline_tag)
                             </label>
                             <input type="text"
                                    id="tag"
                                    name="tag"
                                    placeholder="e.g., text-classification"
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                            <p class="mt-1 text-xs text-gray-500">Leave empty to scan all</p>
+                                   class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                            <p class="helper-text mt-1 text-xs">Leave empty to scan all</p>
                         </div>
 
                         <div>
-                            <label for="author" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="author" class="input-label block text-sm font-medium mb-2">
                                 Author
                             </label>
                             <input type="text"
                                    id="author"
                                    name="author"
                                    placeholder="e.g., microsoft, google"
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                            <p class="mt-1 text-xs text-gray-500">Leave empty to scan all</p>
+                                   class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                            <p class="helper-text mt-1 text-xs">Leave empty to scan all</p>
                         </div>
                     </div>
 
                     <div>
-                        <label for="model_name" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="model_name" class="input-label block text-sm font-medium mb-2">
                             Model Name
                         </label>
                         <input type="text"
                                id="model_name"
                                name="model_name"
                                placeholder="e.g., bert-base"
-                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                        <p class="mt-1 text-xs text-gray-500">Specific model name to search for</p>
+                               class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        <p class="helper-text mt-1 text-xs">Specific model name to search for</p>
                     </div>
 
                     <div>
-                        <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="search" class="input-label block text-sm font-medium mb-2">
                             General Search Term
                         </label>
                         <input type="text"
                                id="search"
                                name="search"
                                placeholder="e.g., sentiment"
-                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                        <p class="mt-1 text-xs text-gray-500">Search across all model fields</p>
+                               class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                        <p class="helper-text mt-1 text-xs">Search across all model fields</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="trained_dataset" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="trained_dataset" class="input-label block text-sm font-medium mb-2">
                                 Trained Dataset
                             </label>
                             <input type="text"
                                    id="trained_dataset"
                                    name="trained_dataset"
                                    placeholder="e.g., glue"
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                                   class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
                         </div>
 
                         <div>
-                            <label for="library" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="library" class="input-label block text-sm font-medium mb-2">
                                 Library
                             </label>
                             <input type="text"
                                    id="library"
                                    name="library"
                                    placeholder="e.g., transformers"
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                                   class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="language" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="language" class="input-label block text-sm font-medium mb-2">
                                 Language
                             </label>
                             <input type="text"
                                    id="language"
                                    name="language"
                                    placeholder="e.g., en, fr"
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                                   class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
                         </div>
 
                         <div>
-                            <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="tags" class="input-label block text-sm font-medium mb-2">
                                 Tags
                             </label>
                             <input type="text"
                                    id="tags"
                                    name="tags"
                                    placeholder="e.g., bert, finetuned"
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                                   class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="limit" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="limit" class="input-label block text-sm font-medium mb-2">
                                 Number of Models
                             </label>
                             <input type="number"
@@ -416,35 +461,35 @@
                                    name="limit"
                                    placeholder="e.g., 10"
                                    min="1"
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                            <p class="mt-1 text-xs text-gray-500">Maximum models to return</p>
+                                   class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                            <p class="helper-text mt-1 text-xs">Maximum models to return</p>
                         </div>
 
                         <div>
-                            <label for="sort" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="sort" class="input-label block text-sm font-medium mb-2">
                                 Sort By
                             </label>
                             <select id="sort"
                                     name="sort"
-                                    class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                                <option value="">Default (Relevance)</option>
-                                <option value="last_modified">Last Modified</option>
-                                <option value="downloads">Downloads</option>
-                                <option value="likes">Likes</option>
+                                    class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                                <option value="" class="bg-palo-input">Default (Relevance)</option>
+                                <option value="last_modified" class="bg-palo-input">Last Modified</option>
+                                <option value="downloads" class="bg-palo-input">Downloads</option>
+                                <option value="likes" class="bg-palo-input">Likes</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
-                        <label for="direction" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="direction" class="input-label block text-sm font-medium mb-2">
                             Sort Direction
                         </label>
                         <select id="direction"
                                 name="direction"
-                                class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
-                            <option value="">Default</option>
-                            <option value="desc">Descending</option>
-                            <option value="asc">Ascending</option>
+                                class="form-input w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-palo-orange focus:border-transparent">
+                            <option value="" class="bg-palo-input">Default</option>
+                            <option value="desc" class="bg-palo-input">Descending</option>
+                            <option value="asc" class="bg-palo-input">Ascending</option>
                         </select>
                     </div>
 
@@ -458,17 +503,17 @@
         <!-- Loading Indicator -->
         <div class="loading hidden text-center py-8 fade-in" id="loading">
             <div class="inline-block">
-                <div class="w-16 h-16 border-4 border-palo-light-gray border-t-palo-orange rounded-full animate-spin mx-auto"></div>
-                <p class="mt-4 text-lg text-gray-700">Scanning models, please wait...</p>
-                <p class="text-sm text-gray-500 mt-2">This may take a few moments depending on the number of models</p>
+                <div class="w-16 h-16 border-4 border-palo-input border-t-palo-orange rounded-full animate-spin mx-auto"></div>
+                <p class="mt-4 text-lg text-gray-200">Scanning models, please wait...</p>
+                <p class="helper-text mt-2 text-sm">This may take a few moments depending on the number of models</p>
             </div>
         </div>
 
         <!-- Results Display -->
-        <div id="result" class="result hidden mt-8 p-6 rounded-xl card fade-in"></div>
+        <div id="result" class="result hidden mt-8 p-6 rounded-xl card fade-in border border-palo-input"></div>
     </div>
 
-    <footer class="text-center py-8 text-gray-600 text-sm">
+    <footer class="text-center py-8 helper-text text-sm">
         <p>Powered by Palo Alto Networks Model Security API</p>
     </footer>
 
@@ -680,13 +725,13 @@
             resultDiv.textContent = message;
 
             // Clear existing classes
-            resultDiv.className = 'mt-8 p-6 rounded-xl card fade-in ';
+            resultDiv.className = 'mt-8 p-6 rounded-xl card fade-in border border-palo-input ';
 
             // Add appropriate classes based on type
             if (type === 'success') {
-                resultDiv.classList.add('bg-green-50', 'border', 'border-green-200', 'text-green-800');
+                resultDiv.classList.add('bg-green-900', 'border-green-700', 'text-green-100');
             } else {
-                resultDiv.classList.add('bg-red-50', 'border', 'border-red-200', 'text-red-800');
+                resultDiv.classList.add('bg-red-900', 'border-red-700', 'text-red-100');
             }
 
             resultDiv.classList.remove('hidden');
