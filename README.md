@@ -117,6 +117,9 @@ With Docker installed, you can build and run the application using either the Do
 
 # Usage
 
+### Connect to hosted Kubernetes service
+1. http(s)://pan-model-scanner-ui-service
+   
 ### Direct Execution
 1. Run the web application:
    ```bash
