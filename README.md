@@ -89,7 +89,7 @@ The application supports the following search criteria for finding Hugging Face 
    ```
 
 ## Option 2: Use Build Script
-1. Set up the required environment variables or create and source .env:
+1. Set up required environment variables or create and source .env:
    ```bash
    export MODEL_SECURITY_CLIENT_ID="your_client_id"
    export MODEL_SECURITY_CLIENT_SECRET="your_client_secret"
@@ -102,12 +102,7 @@ The application supports the following search criteria for finding Hugging Face 
    ```
 
 ## Option 3: Manual Installation
-1. Set up the required environment variables or create and source .env file:
-   ```bash
-   export MODEL_SECURITY_CLIENT_ID="your_client_id"
-   export MODEL_SECURITY_CLIENT_SECRET="your_client_secret"
-   export TSG_ID="your_tsg_id"
-   ```
+1. Set up required environment variables or create and source .env file:
 
 2. Install AI Model Security.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security
 
@@ -127,7 +122,7 @@ The application supports the following search criteria for finding Hugging Face 
 1. http(s)://pan-model-scanner-ui-service(:5000)
    
 ## Direct Execution
-1. Run the web application:
+1. Run web application:
    ```bash
    python web_app.py
    ```
