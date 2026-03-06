@@ -8,7 +8,7 @@
 
 See AI Model Scanning documentation at: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security
 
-### Scanning Methods
+## Scanning Methods
 
 1. **Hugging Face Models**: Scan models directly from Hugging Face Hub using URLs or search criteria
 2. **Local Models**: Upload model files directly through the web interface for scanning
@@ -47,13 +47,11 @@ The application supports the following search criteria for finding Hugging Face 
 ## Required
 - **User must provide a Security Group UUID** - maps to the Model Security Group scan settings.
 
-### Installation
+# Installation
 
-## Kubernetes/Docker Deployment (Recommended)
+## Option 1: Kubernetes/Docker Deployment (Recommended)
 
-To deploy the application to a Kubernetes cluster or docker host:
-
-#Kubernetes
+###Kubernetes
 1. Ensure you have kubectl configured to access your cluster
 
 2. Create a Kubernetes deployment or pod yaml file and set your individual environment variables:
@@ -61,7 +59,7 @@ To deploy the application to a Kubernetes cluster or docker host:
    - MODEL_SECURITY_CLIENT_SECRET
    - TSG_ID
 
-   Create a `deployment.yaml` or `pod.yaml` file to pull the image: jefrihillon/pan-model-scanner-ui:version.  Add your individual model scanner credentials as environment variables or kubernetes secrets:
+   Create a `deployment.yaml` or `pod.yaml` file to pull the image: jefrihillon/pan-model-scanner-ui:version.  Add your individual model scanner credentials as environment variables or Kubernetes secrets:
    ```yaml
    env:
    - name: MODEL_SECURITY_CLIENT_ID
@@ -79,7 +77,7 @@ To deploy the application to a Kubernetes cluster or docker host:
 
 Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them as local environment variables.
 
-#Docker/Compose
+###Docker/Compose
 1. ```
    docker run -p 5000:5000 --env-file .env pan-model-scanner-ui
    ```
@@ -120,7 +118,7 @@ Note: For production deployments, consider using Kubernetes secrets to manage se
    uv pip install -r pyproject.toml
    ```
 
-### Usage
+# Usage
 
 ## Connect to hosted Kubernetes/Docker service
 1. http(s)://pan-model-scanner-ui-service(:5000)
@@ -150,7 +148,7 @@ python main.py --cli
 CLI prompts user for Security Group UUID
 
 
-### Customize -> repackage
+# Customize -> repackage
 1. Create individual secret files with your credentials:
    ```bash
    # You can either extract values from .env file:
