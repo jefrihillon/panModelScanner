@@ -52,14 +52,8 @@ The application supports the following search criteria for finding Hugging Face 
 ## Option 1: Kubernetes/Docker Deployment (Recommended)
 
 ## Kubernetes
-1. Ensure you have kubectl configured to access your cluster
 
-2. Create a Kubernetes deployment or pod yaml file and set your individual environment variables:
-   - MODEL_SECURITY_CLIENT_ID
-   - MODEL_SECURITY_CLIENT_SECRET
-   - TSG_ID
-
-   Create a `deployment.yaml` or `pod.yaml` file to pull the image: jefrihillon/pan-model-scanner-ui:version.  Add your individual model scanner credentials as environment variables or Kubernetes secrets:
+2. Create a `deployment.yaml` or `pod.yaml` file to pull image: jefrihillon/pan-model-scanner-ui:version.  Add your individual model scanner credentials as environment variables or Kubernetes secrets at runtime.  For production deployments, consider using more secure Kubernetes secrets over sensitive environment variables.
    ```yaml
    env:
    - name: MODEL_SECURITY_CLIENT_ID
@@ -74,8 +68,6 @@ The application supports the following search criteria for finding Hugging Face 
    ```bash
    kubectl apply -f deployment.yaml service.yaml ...
    ```
-
-   Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them as local environment variables.
 
 ## Docker/Compose
 1. Apply environment variables at runtime
