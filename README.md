@@ -165,7 +165,3 @@ CLI prompts user for Security Group UUID
    or:
    docker-compose up -d
    ```
-
-4. `http://localhost:5000`
-
-5. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
