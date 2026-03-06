@@ -78,7 +78,8 @@ The application supports the following search criteria for finding Hugging Face 
    Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them as local environment variables.
 
 ## Docker/Compose
-1. ```
+1. Apply environment variables at runtime
+   ```
    docker run -p 5000:5000 --env-file .env pan-model-scanner-ui
    ```
    or:
