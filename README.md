@@ -30,7 +30,7 @@ The application provides a browser-based UI for the Palo Alto Networks Model Sca
 - Responsive design that works on desktop and mobile devices
 - Real-time feedback with loading indicators and ALLOWED/BLOCKED outcomes
 
-## Advanced Search Criteria
+## Search Criteria
 
 The application supports the following search criteria for finding Hugging Face models:
 - **Task Type (pipeline_tag)**: Filter by specific ML task (e.g., text-classification, image-classification, text-to-speech...)
@@ -165,3 +165,6 @@ CLI prompts user for Security Group UUID
    or:
    docker compose up -d
    ```
+
+# Current Known Bugs
+ - if hosting on a kubernetes server and have issued a certificate via cert-manager, scans still successfully run, but the output from the scan has an html bug.  You will still see your scan results in Strata Cloud Manager.
