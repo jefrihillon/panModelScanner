@@ -161,12 +161,8 @@ CLI prompts user for Security Group UUID
      --secret id=tsg,src=tsg.txt \
      .
 
-   # Apply environment variables at runtime
    docker run -p 5000:5000 --env-file .env pan-model-scanner-ui
-   ```
    or:
-   
-   ```
    docker-compose up -d
    ```
 
