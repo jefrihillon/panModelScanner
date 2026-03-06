@@ -6,7 +6,7 @@
 
 <img width="1151" height="191" alt="Screenshot 2026-03-05 at 2 34 32 PM" src="https://github.com/user-attachments/assets/90ca16cd-937d-4240-a3d3-e38453c1702b" />
 
-See AI Model Scanning documentation at: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security
+[Palo Alto Networks AI Model Scanning docs](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security)
 
 ## Scanning Methods
 
@@ -14,7 +14,7 @@ See AI Model Scanning documentation at: https://docs.paloaltonetworks.com/ai-run
 2. **Local Models**: Upload model files directly through the web interface for scanning
 3. **Object Storage Models**: Scan models stored in cloud block storage (S3, GCS, Azure)
 
-Each scan supports labeling for better organization and outcome tracking.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/organize-security-scans-with-custom-labels
+Each scan supports [labeling](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/organize-security-scans-with-custom-labels) for better organization and outcome tracking.
 
 ## How It Works
 
