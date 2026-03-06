@@ -16,7 +16,7 @@
 
 Each scan supports [labeling](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/organize-security-scans-with-custom-labels) for better organization and outcome tracking.
 
-## How It Works
+## What It Does
 
 The application provides a browser-based UI for the Palo Alto Networks Model Scanning Client to use the Hugging Face Hub API, local model storage and/or public block storage to scan models for potential security risks.
 
