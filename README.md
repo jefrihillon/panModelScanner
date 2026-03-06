@@ -75,13 +75,14 @@ The application supports the following search criteria for finding Hugging Face 
    kubectl apply -f deployment.yaml service.yaml ...
    ```
 
-Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them as local environment variables.
+   Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them as local environment variables.
 
 ## Docker/Compose
 1. ```
    docker run -p 5000:5000 --env-file .env pan-model-scanner-ui
    ```
    or:
+   
    ```
    docker-compose up -d
    ```
@@ -114,6 +115,7 @@ Note: For production deployments, consider using Kubernetes secrets to manage se
    pip install -r requirements.txt 
    ```
    or:
+   
    ```bash
    uv pip install -r pyproject.toml
    ```
@@ -175,10 +177,11 @@ CLI prompts user for Security Group UUID
    docker run -p 5000:5000 --env-file .env pan-model-scanner-ui
    ```
    or:
+   
    ```
    docker-compose up -d
    ```
 
-3. `http://localhost:5000`
+4. `http://localhost:5000`
 
-4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
+5. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
