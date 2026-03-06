@@ -6,55 +6,56 @@
 <img width="1151" height="191" alt="Screenshot 2026-03-05 at 2 34 32 PM" src="https://github.com/user-attachments/assets/90ca16cd-937d-4240-a3d3-e38453c1702b" />
 
 
-This application provides a web interface for scanning Hugging Face models, Local Models, or Object Storage for security vulnerabilities using the Palo Alto Networks Model Security API. Users must provide a security group UUID to specify which models to scan based on their security group settings.
+This application provides a web interface for scanning Hugging Face models, Local Models, or Object Storage for security vulnerabilities using the Palo Alto Networks Model Security API. Users must provide a security group UUID to specify the intended scan configuration.
 
-Please see AI Model Scanning documentation at: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security
+See AI Model Scanning documentation at: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security
 
 ### Scanning Methods
 
 1. **Hugging Face Models**: Scan models directly from Hugging Face Hub using URLs or search criteria
 2. **Local Models**: Upload model files directly through the web interface for scanning
-3. **Object Storage Models**: Scan models stored in cloud storage services (S3, GCS, Azure, HTTPS)
+3. **Object Storage Models**: Scan models stored in cloud block storage (S3, GCS, Azure)
 
-Each scanning method supports custom model metadata (name, version) and environment labeling for better organization and tracking.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/organize-security-scans-with-custom-labels
+Each scan supports labeling for better organization and outcome tracking.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/organize-security-scans-with-custom-labels
 
 ## How It Works
 
-The application provides a browser-based UI for the Palo Alto Networks Model Scanning API to use the Hugging Face Hub API, local model storage and/or public block storage to scan models for potential security issues.
+The application provides a browser-based UI for the Palo Alto Networks Model Scanning Client to use the Hugging Face Hub API, local model storage and/or public block storage to scan models for potential security risks.
 
 ## Features
 
 - Scan specific Hugging Face models by URL
-- Scan multiple models using all available search exposed via the Hugging Face API
-- Scan local model files with direct upload capability
-- Scan models from cloud object storage (Amazon S3, Google Cloud Storage, Azure Blob Storage, HTTPS)
-- User-friendly web interface with forms instead of command-line prompts
+- Scan multiple models using available search criteria published via the HuggingFace API
+- Scan local model files with direct upload
+- Scan models hosted in cloud object storage (Amazon S3, Google Cloud Storage, Azure Blob Storage)
+- User-friendly web interface
 - Responsive design that works on desktop and mobile devices
-- Real-time feedback with loading indicators and success/error notifications
+- Real-time feedback with loading indicators and ALLOWED/BLOCKED outcomes
 
 ## Advanced Search Criteria
 
 The application supports the following search criteria for finding Hugging Face models:
-- **Task Type (pipeline_tag)**: Filter by specific ML task (e.g., text-classification, image-classification, etc)
+- **Task Type (pipeline_tag)**: Filter by specific ML task (e.g., text-classification, image-classification, text-to-speech...)
 - **Author**: Filter by model author/organization
 - **Model Name**: Search for specific model names
 - **General Search**: Search across available model fields
 - **Trained Dataset**: Filter by the dataset the model was trained on
 - **Library**: Filter by foundational library (e.g., transformers, pytorch, etc)
 - **Language**: Filter by language supported by the model
-- **Tags**: Filter by additional tags
+- **Tags**: Filter by tags
 - **Sort Options**: Sort by relevance, last modified, downloads, or likes
-- **Sort Direction**: Ascending or descending order
+- **Sort Direction**: Ascending/Descending
 
 ## Required
 - **User must provide a Security Group UUID** - maps to the Model Security Group scan settings.
 
-## Installation
+### Installation
 
 ## Kubernetes/Docker Deployment (Recommended)
 
-To deploy the application to a Kubernetes cluster:
+To deploy the application to a Kubernetes cluster or docker host:
 
+#Kubernetes
 1. Ensure you have kubectl configured to access your cluster
 
 2. Create a Kubernetes deployment or pod yaml file and set your individual environment variables:
@@ -80,26 +81,16 @@ To deploy the application to a Kubernetes cluster:
 
 Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them as local environment variables.
 
-### Option 2: Manual Installation
-1. Set up the required environment variables or create and source .env file:
-   ```bash
-   export MODEL_SECURITY_CLIENT_ID="your_client_id"
-   export MODEL_SECURITY_CLIENT_SECRET="your_client_secret"
-   export TSG_ID="your_tsg_id"
+#Docker/Compose
+1. ```
+   docker run -p 5000:5000 --env-file .env pan-model-scanner-ui
    ```
-2. Install AI Model Security.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security
-
-3. Install remaining required dependencies:
-   ```bash
-   pip install -r requirements.txt 
+   or:
+   ```
+   docker-compose up -d
    ```
 
-   Or:
-   ```bash
-   uv pip install -r pyproject.toml
-   ```
-
-### Option 3: Using Build Script
+## Option 2: Use Build Script
 1. Set up the required environment variables or create and source .env:
    ```bash
    export MODEL_SECURITY_CLIENT_ID="your_client_id"
@@ -112,15 +103,31 @@ Note: For production deployments, consider using Kubernetes secrets to manage se
    ./build.sh
    ```
 
-### Option 4: Docker Compose
-Set environment variables and then 'docker compose up -d'
+## Option 3: Manual Installation
+1. Set up the required environment variables or create and source .env file:
+   ```bash
+   export MODEL_SECURITY_CLIENT_ID="your_client_id"
+   export MODEL_SECURITY_CLIENT_SECRET="your_client_secret"
+   export TSG_ID="your_tsg_id"
+   ```
 
-# Usage Options
+2. Install AI Model Security.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security
 
-### Connect to hosted Kubernetes/Docker service
+3. Install remaining dependencies:
+   ```bash
+   pip install -r requirements.txt 
+   ```
+   or:
+   ```bash
+   uv pip install -r pyproject.toml
+   ```
+
+### Usage
+
+## Connect to hosted Kubernetes/Docker service
 1. http(s)://pan-model-scanner-ui-service(:5000)
    
-### Direct Execution
+## Direct Execution
 1. Run the web application:
    ```bash
    python web_app.py
@@ -128,7 +135,7 @@ Set environment variables and then 'docker compose up -d'
 
 2. `http://localhost:5000`
 
-### Using Run Script
+## Use Run Script
 1. Set up environment variables
 
 2. Use run script:
@@ -138,13 +145,11 @@ Set environment variables and then 'docker compose up -d'
 
 3. `http://localhost:5000`
 
-### Command-Line Interface
-To use the CLI version:
+## Command-Line Interface
 ```bash
 python main.py --cli
 ```
-
-When running the CLI, you'll be prompted for the Security Group UUID
+CLI prompts user for Security Group UUID
 
 
 ### Customize -> repackage
