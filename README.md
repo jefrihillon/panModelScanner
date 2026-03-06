@@ -22,11 +22,11 @@ The application provides a browser-based UI for the Palo Alto Networks Model Sca
 
 ## Features
 
+- User-friendly web interface
 - Scan specific Hugging Face models by URL
 - Scan multiple models using available search criteria published via the HuggingFace API
 - Scan local model files with direct upload
 - Scan models hosted in cloud object storage (Amazon S3, Google Cloud Storage, Azure Blob Storage)
-- User-friendly web interface
 - Responsive design that works on desktop and mobile devices
 - Real-time feedback with loading indicators and ALLOWED/BLOCKED outcomes
 
