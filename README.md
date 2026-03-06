@@ -51,7 +51,7 @@ The application supports the following search criteria for finding Hugging Face 
 
 ## Option 1: Kubernetes/Docker Deployment (Recommended)
 
-###Kubernetes
+## Kubernetes
 1. Ensure you have kubectl configured to access your cluster
 
 2. Create a Kubernetes deployment or pod yaml file and set your individual environment variables:
@@ -77,7 +77,7 @@ The application supports the following search criteria for finding Hugging Face 
 
 Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them as local environment variables.
 
-###Docker/Compose
+## Docker/Compose
 1. ```
    docker run -p 5000:5000 --env-file .env pan-model-scanner-ui
    ```
