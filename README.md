@@ -166,5 +166,5 @@ CLI prompts user for Security Group UUID
    docker compose up -d
    ```
 
-# Current Known Bugs
+## Current Known Bugs
  - if hosting on a kubernetes server and have issued a certificate via cert-manager, scans still successfully run, but the output from the scan has an html bug.  You will still see your scan results in Strata Cloud Manager.
