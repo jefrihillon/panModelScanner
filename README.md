@@ -20,12 +20,12 @@ Each scanning method supports custom model metadata (name, version) and environm
 
 ## How It Works
 
-The application uses the Hugging Face Hub API, local model storage and/or public block storage to discover models. The Palo Alto Networks Model Security API scans them for potential security issues.
+The application provides a browser-based UI for the Palo Alto Networks Model Scanning API to use the Hugging Face Hub API, local model storage and/or public block storage to scan models for potential security issues.
 
 ## Features
 
 - Scan specific Hugging Face models by URL
-- Scan multiple models using advanced search criteria from the Hugging Face API
+- Scan multiple models using all available search exposed via the Hugging Face API
 - Scan local model files with direct upload capability
 - Scan models from cloud object storage (Amazon S3, Google Cloud Storage, Azure Blob Storage, HTTPS)
 - User-friendly web interface with forms instead of command-line prompts
@@ -34,43 +34,43 @@ The application uses the Hugging Face Hub API, local model storage and/or public
 
 ## Advanced Search Criteria
 
-The application supports the following search criteria for finding models:
-- **Task Type (pipeline_tag)**: Filter by specific ML task (e.g., text-classification, image-classification)
+The application supports the following search criteria for finding Hugging Face models:
+- **Task Type (pipeline_tag)**: Filter by specific ML task (e.g., text-classification, image-classification, etc)
 - **Author**: Filter by model author/organization
 - **Model Name**: Search for specific model names
-- **General Search**: Search across all model fields
-- **Trained Dataset**: Filter by dataset the model was trained on
-- **Library**: Filter by foundational library (e.g., transformers, pytorch)
+- **General Search**: Search across available model fields
+- **Trained Dataset**: Filter by the dataset the model was trained on
+- **Library**: Filter by foundational library (e.g., transformers, pytorch, etc)
 - **Language**: Filter by language supported by the model
 - **Tags**: Filter by additional tags
 - **Sort Options**: Sort by relevance, last modified, downloads, or likes
 - **Sort Direction**: Ascending or descending order
 
-The web interface collects user input through HTML forms and displays the scan results in an easy-to-read format. Users must provide a Security Group UUID which determines which models will be scanned based on their security group settings.
+## Required
+- **User must provide a Security Group UUID** - maps to the Model Security Group scan settings.
 
 ## Installation
 
-## Kubernetes Deployment (Recommended)
+## Kubernetes/Docker Deployment (Recommended)
 
 To deploy the application to a Kubernetes cluster:
 
 1. Ensure you have kubectl configured to access your cluster
 
-2. Update a Kubernetes deployment or pod yaml file with your environment model scanner environment variables:
-   The deployment file includes environment variables for:
+2. Create a Kubernetes deployment or pod yaml file and set your individual environment variables:
    - MODEL_SECURITY_CLIENT_ID
    - MODEL_SECURITY_CLIENT_SECRET
    - TSG_ID
 
-   Create a `deployment.yaml` or `pod.yaml` file to pull the image: jefrihillon/pan-model-scanner-ui:latest and within the pod spec for the image add the environment variables for your specific model scanner credentials:
+   Create a `deployment.yaml` or `pod.yaml` file to pull the image: jefrihillon/pan-model-scanner-ui:version.  Add your individual model scanner credentials as environment variables or kubernetes secrets:
    ```yaml
    env:
    - name: MODEL_SECURITY_CLIENT_ID
-     value: "your_client_id_here"
+     value: "your_client_id"
    - name: MODEL_SECURITY_CLIENT_SECRET
-     value: "your_client_secret_here"
+     value: "your_client_secret"
    - name: TSG_ID
-     value: "your_tsg_id_here"
+     value: "your_tsg_id"
    ```
 
 3. Apply the Kubernetes manifest(s):
@@ -78,7 +78,7 @@ To deploy the application to a Kubernetes cluster:
    kubectl apply -f deployment.yaml service.yaml ...
    ```
 
-Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them in the deployment file.
+Note: For production deployments, consider using Kubernetes secrets to manage sensitive environment variables rather than hardcoding them as local environment variables.
 
 ### Option 2: Manual Installation
 1. Set up the required environment variables or create and source .env file:
@@ -91,10 +91,10 @@ Note: For production deployments, consider using Kubernetes secrets to manage se
 
 3. Install remaining required dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements.txt 
    ```
 
-   Or if using uv:
+   Or:
    ```bash
    uv pip install -r pyproject.toml
    ```
@@ -112,13 +112,13 @@ Note: For production deployments, consider using Kubernetes secrets to manage se
    ./build.sh
    ```
 
-### Option 4: Docker Installation
-With Docker installed, you can build and run the application using either the Dockerfile directly or docker compose. The Dockerfile uses BuildKit secrets to securely handle environment variables during the build process, preventing credentials from being copied into the container image if you make your own changes to the code and want to republish it to a public repo. You can put your own environment variables into a .env file and use ./extract_secrets.sh to secure them where only root can view and lauch the app with a simple 'docker compose up -d'.
+### Option 4: Docker Compose
+Set environment variables and then 'docker compose up -d'
 
-# Usage
+# Usage Options
 
-### Connect to hosted Kubernetes service
-1. http(s)://pan-model-scanner-ui-service
+### Connect to hosted Kubernetes/Docker service
+1. http(s)://pan-model-scanner-ui-service(:5000)
    
 ### Direct Execution
 1. Run the web application:
@@ -126,21 +126,17 @@ With Docker installed, you can build and run the application using either the Do
    python web_app.py
    ```
 
-2. Open your browser and navigate to `http://localhost:5000`
-
-3. When using the web interface, you'll need to provide the Security Group UUID (See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/scanning-models for info on Security Group UUIDs) into the input field at the top of the page. This UUID determines the security group settings.
+2. `http://localhost:5000`
 
 ### Using Run Script
-1. Set up environment variables (see Installation section)
+1. Set up environment variables
 
-2. Run the application:
+2. Use run script:
    ```bash
    ./run.sh
    ```
 
-3. Open your browser and navigate to `http://localhost:5000`
-
-4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
+3. `http://localhost:5000`
 
 ### Command-Line Interface
 To use the CLI version:
@@ -148,9 +144,10 @@ To use the CLI version:
 python main.py --cli
 ```
 
-When running the CLI, you'll be prompted to enter a Security Group UUID before proceeding with the scan.
+When running the CLI, you'll be prompted for the Security Group UUID
 
-# Docker 
+
+### Customize -> repackage
 1. Create individual secret files with your credentials:
    ```bash
    # You can either extract values from .env file:
@@ -162,43 +159,25 @@ When running the CLI, you'll be prompted to enter a Security Group UUID before p
    echo "your_tsg_id" > tsg.txt
    ```
 
-2. Build and run with Docker using BuildKit secrets:
+2. Build and run with Docker secrets:
    ```bash
    # Enable BuildKit (if docker version < 23.x.x)
    export DOCKER_BUILDKIT=1
 
-   # Build with secrets
-   docker build -t hf-model-scanner \
+   docker build -t pan-model-scanner-ui \
      --secret id=id,src=id.txt \
      --secret id=secret,src=secret.txt \
      --secret id=tsg,src=tsg.txt \
      .
 
-   # Run with environment variables (needed at runtime for your own TSG, CLIENT_ID, and CLIENT_SECRET)
-   docker run -p 5000:5000 --env-file .env hf-model-scanner
+   # Apply environment variables at runtime
+   docker run -p 5000:5000 --env-file .env pan-model-scanner-ui
    ```
-
-3. Open your browser and navigate to `http://localhost:5000`
-
-4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
-
-# Docker Compose
-1. Create individual secret files with your credentials:
-   ```bash
-   # You can either extract values from .env file:
-   ./extract_secrets.sh
-
-   # Or create the files manually:
-   echo "your_client_id" > id.txt
-   echo "your_client_secret" > secret.txt
-   echo "your_tsg_id" > tsg.txt
-   ```
-
-2. Run with docker-compose:
+   or:
    ```
    docker-compose up -d
    ```
 
-3. Open your browser and navigate to `http://localhost:5000`
+3. `http://localhost:5000`
 
 4. When using the web interface, you'll need to provide a Security Group UUID in the new input field at the top of the page.
