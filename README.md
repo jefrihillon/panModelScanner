@@ -77,7 +77,7 @@ The application supports the following search criteria for finding Hugging Face 
    or:
    
    ```
-   docker-compose up -d
+   docker compose up -d
    ```
 
 ## Option 2: Use Build Script
@@ -163,5 +163,5 @@ CLI prompts user for Security Group UUID
 
    docker run -p 5000:5000 --env-file .env pan-model-scanner-ui
    or:
-   docker-compose up -d
+   docker compose up -d
    ```
