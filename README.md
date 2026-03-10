@@ -4,6 +4,7 @@
 
 <img width="1174" height="844" alt="Screenshot 2026-03-05 at 2 21 58 PM" src="https://github.com/user-attachments/assets/8838c8fb-4ecb-4426-a991-f625d22c122e" />
 
+<img width="1145" height="790" alt="Screenshot 2026-03-10 at 5 14 54 PM" src="https://github.com/user-attachments/assets/eb5ca073-916a-4d79-ac6b-f4722958e2b1" />
 
 [Palo Alto Networks AI Model Scanning docs](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security)
 
