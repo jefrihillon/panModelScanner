@@ -213,3 +213,4 @@ kubernetes/
 .read*
 backups/
 changes1.3
+*.yaml
