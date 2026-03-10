@@ -34,6 +34,36 @@ The application provides a browser-based UI for the Palo Alto Networks Model Sca
 
 The application supports the following search criteria for finding Hugging Face models:
 - **Task Type (pipeline_tag)**: Filter by specific ML task (e.g., text-classification, image-classification, text-to-speech...)
+  - **Natural Language Processing:**
+    - `text-classification` (alias `sentiment-analysis` available)
+    - `token-classification` (alias `ner` available)
+    - `question-answering`
+    - `fill-mask`
+    - `summarization`
+    - `translation_xx_to_yy` and `translation`
+    - `text2text-generation`
+    - `text-generation`
+    - `zero-shot-classification`
+    - `table-question-answering`
+    - `feature-extraction`
+    - `conversational`
+  - **Audio:**
+    - `automatic-speech-recognition`
+    - `audio-classification`
+    - `text-to-audio` (alias `text-to-speech` available)
+    - `zero-shot-audio-classification`
+  - **Computer Vision:**
+    - `image-classification`
+    - `object-detection`
+    - `image-segmentation`
+    - `image-to-text`
+    - `depth-estimation`
+    - `video-classification`
+    - `zero-shot-image-classification`
+    - `zero-shot-object-detection`
+    - `mask-generation`
+    - `visual-question-answering`
+    - `document-question-answering`
 - **Author**: Filter by model author/organization
 - **Model Name**: Search for specific model names
 - **General Search**: Search across available model fields
