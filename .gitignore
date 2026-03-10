@@ -211,3 +211,5 @@ base_stuff/
 *.txt
 kubernetes/
 .read*
+backups/
+changes1.3
