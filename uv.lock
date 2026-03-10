@@ -1,0 +1,16 @@
+version = 1
+revision = 3
+requires-python = ">=3.11"
+
+[[package]]
+name = "pan-model-scanner-ui"
+version = "1.2"
+source = { virtual = "." }
+dependencies = [
+    { name = "flask" },
+    { name = "huggingface-hub" },
+    { name = "boto3" },
+    { name = "google-cloud-storage" },
+    { name = "azure-storage-blob" },
+    { name = "requests" },
+]
