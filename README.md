@@ -72,7 +72,7 @@ The following search criteria are searchable criteria when assessing risks assoc
 
 ## Kubernetes
 
-2. Create a `deployment.yaml` or `pod.yaml` file (see example deployment.yaml) to pull image: jefrihillon/pan-model-scanner-ui:version.  Add your model scanner credentials as environment variables or Kubernetes secrets at runtime.
+2. Create a `deployment.yaml` or `pod.yaml` file (see example in Kubernetes directory) to pull image: jefrihillon/pan-model-scanner-ui:version.  Add your model scanner credentials as environment variables or Kubernetes secrets at runtime.
    **For production deployments, consider using more secure Kubernetes secrets over sensitive environment variables**
    ```yaml
    env:
