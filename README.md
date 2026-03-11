@@ -74,7 +74,9 @@ The application supports the following search criteria for finding and scanning 
 
 ## Kubernetes
 
-2. Create a `deployment.yaml` or `pod.yaml` file to pull image ([see example](https://github.com/jefrihillon/panModelScanner/tree/main/kubernetes) in kubernetes directory): jefrihillon/pan-model-scanner-ui:version.  Add your individual model scanner credentials as environment variables or Kubernetes secrets at runtime.  For production deployments, consider using the more secure Kubernetes secrets over sensitive environment variables.
+2. Create a `deployment.yaml` or `pod.yaml` file to pull image ([see example](https://github.com/jefrihillon/panModelScanner/tree/main/kubernetes) in kubernetes directory): jefrihillon/pan-model-scanner-ui:version.  Add your individual model scanner credentials as environment variables or Kubernetes secrets at runtime.  
+
+Note: **For production deployments, consider using the more secure Kubernetes secrets over sensitive environment variables.**
    ```yaml
    env:
    - name: MODEL_SECURITY_CLIENT_ID
