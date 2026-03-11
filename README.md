@@ -21,7 +21,7 @@ Each scan supports [labeling](https://docs.paloaltonetworks.com/ai-runtime-secur
 The application provides users with 3 things:
 1. Simplify deployment by bypassing the [Palo Alto Networks Model Scanner Installation Steps](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security)
 2. Expose the user to the available search criteria made available by the HuggingFace API
-3. Provide immediate results to the result of scanned models (full results can be found in Strata Cloud Manager)
+3. Provide immediate results for scanned models (full results can be found in Strata Cloud Manager)
 
 ## Search Criteria
 
