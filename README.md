@@ -24,7 +24,7 @@ Each scan supports [labeling](https://docs.paloaltonetworks.com/ai-runtime-secur
 ## HuggingFace Search Criteria
 
 The application supports the following search criteria for finding and scanning Hugging Face models for potential security issues:
-- **Task Type (pipeline_tag)**: Filter by specific ML task (e.g., text-classification, image-classification, text-to-speech...)
+- **Task Type (pipeline_tag)**: Filter by specific ML task:
   - **Natural Language Processing:**
     - `text-classification` (alias `sentiment-analysis` available)
     - `token-classification` (alias `ner` available)
