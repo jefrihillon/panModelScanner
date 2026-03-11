@@ -553,19 +553,44 @@
                 if (data.error) {
                     showResult(`Error: ${data.error}`, 'error');
                 } else if (data.status === 'success') {
-                    // Create HTML table for single model result
+                    // Create HTML table for single model result with customized display
                     let resultHtml = '<h3 class="text-xl font-bold mb-4">Scan Results:</h3>';
                     resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
-                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model ID</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
-                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${data.scan_result}</td></tr>`;
+                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model ID</th><th class="py-2 px-4 text-left">Scan Result</th><th class="py-2 px-4 text-left">Reason</th></tr></thead><tbody>';
+
+                    // Check the scan result to determine the display
+                    if (data.scan_result.includes('EvalOutcome.BLOCKED')) {
+                        if (data.scan_uuid) {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-red-400 hover:text-red-300 underline"><span class="text-red-400">✗</span> BLOCKED</a></td></tr>`;
+                        } else {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><span class="text-red-400">✗</span> BLOCKED</td></tr>`;
+                        }
+                    } else if (data.scan_result.includes('EvalOutcome.ALLOWED')) {
+                        if (data.scan_uuid) {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-green-400 hover:text-green-300 underline"><span class="text-green-400">✓</span> ALLOWED</a></td></tr>`;
+                        } else {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ALLOWED</td></tr>`;
+                        }
+                    } else {
+                        if (data.scan_uuid) {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-green-400 hover:text-green-300 underline"><span class="text-green-400">✓</span> ${data.scan_result}</a></td></tr>`;
+                        } else {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${data.scan_result}</td></tr>`;
+                        }
+                    }
+
                     resultHtml += '</tbody></table></div>';
                     showResultHtml(resultHtml, 'success');
                 } else {
-                    // Create HTML table for error result
+                    // Create HTML table for error result with hand emoji
                     let resultHtml = '<h3 class="text-xl font-bold mb-4">Scan Results:</h3>';
                     resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
                     resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model ID</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
-                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><span class="text-red-400">✗</span> Error - ${data.error}</td></tr>`;
+                    if (data.scan_uuid) {
+                        resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-yellow-400 hover:text-yellow-300 underline"><span class="text-yellow-400">✋</span> ERROR</a></td></tr>`;
+                    } else {
+                        resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><span class="text-yellow-400">✋</span> ERROR</td></tr>`;
+                    }
                     resultHtml += '</tbody></table></div>';
                     showResultHtml(resultHtml, 'error');
                 }
@@ -609,19 +634,44 @@
                 if (data.error) {
                     showResult(`Error: ${data.error}`, 'error');
                 } else if (data.status === 'success') {
-                    // Create HTML table for local model result
+                    // Create HTML table for local model result with customized display
                     let resultHtml = '<h3 class="text-xl font-bold mb-4">Local Model Scan Results:</h3>';
                     resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
-                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
-                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${data.scan_result}</td></tr>`;
+                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model</th><th class="py-2 px-4 text-left">Scan Result</th><th class="py-2 px-4 text-left">Reason</th></tr></thead><tbody>';
+
+                    // Check the scan result to determine the display
+                    if (data.scan_result.includes('EvalOutcome.BLOCKED')) {
+                        if (data.scan_uuid) {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-red-400 hover:text-red-300 underline"><span class="text-red-400">✗</span> BLOCKED</a></td></tr>`;
+                        } else {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><span class="text-red-400">✗</span> BLOCKED</td></tr>`;
+                        }
+                    } else if (data.scan_result.includes('EvalOutcome.ALLOWED')) {
+                        if (data.scan_uuid) {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-green-400 hover:text-green-300 underline"><span class="text-green-400">✓</span> ALLOWED</a></td></tr>`;
+                        } else {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ALLOWED</td></tr>`;
+                        }
+                    } else {
+                        if (data.scan_uuid) {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-green-400 hover:text-green-300 underline"><span class="text-green-400">✓</span> ${data.scan_result}</a></td></tr>`;
+                        } else {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${data.scan_result}</td></tr>`;
+                        }
+                    }
+
                     resultHtml += '</tbody></table></div>';
                     showResultHtml(resultHtml, 'success');
                 } else {
-                    // Create HTML table for error result
+                    // Create HTML table for error result with hand emoji
                     let resultHtml = '<h3 class="text-xl font-bold mb-4">Local Model Scan Results:</h3>';
                     resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
                     resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
-                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><span class="text-red-400">✗</span> Error - ${data.error}</td></tr>`;
+                    if (data.scan_uuid) {
+                        resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-yellow-400 hover:text-yellow-300 underline"><span class="text-yellow-400">✋</span> ERROR</a></td></tr>`;
+                    } else {
+                        resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><span class="text-yellow-400">✋</span> ERROR</td></tr>`;
+                    }
                     resultHtml += '</tbody></table></div>';
                     showResultHtml(resultHtml, 'error');
                 }
@@ -674,19 +724,44 @@
                 if (data.error) {
                     showResult(`Error: ${data.error}`, 'error');
                 } else if (data.status === 'success') {
-                    // Create HTML table for storage model result
+                    // Create HTML table for storage model result with customized display
                     let resultHtml = '<h3 class="text-xl font-bold mb-4">Storage Model Scan Results:</h3>';
                     resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
-                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
-                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${data.scan_result}</td></tr>`;
+                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model</th><th class="py-2 px-4 text-left">Scan Result</th><th class="py-2 px-4 text-left">Reason</th></tr></thead><tbody>';
+
+                    // Check the scan result to determine the display
+                    if (data.scan_result.includes('EvalOutcome.BLOCKED')) {
+                        if (data.scan_uuid) {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-red-400 hover:text-red-300 underline"><span class="text-red-400">✗</span> BLOCKED</a></td></tr>`;
+                        } else {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><span class="text-red-400">✗</span> BLOCKED</td></tr>`;
+                        }
+                    } else if (data.scan_result.includes('EvalOutcome.ALLOWED')) {
+                        if (data.scan_uuid) {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-green-400 hover:text-green-300 underline"><span class="text-green-400">✓</span> ALLOWED</a></td></tr>`;
+                        } else {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ALLOWED</td></tr>`;
+                        }
+                    } else {
+                        if (data.scan_uuid) {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-green-400 hover:text-green-300 underline"><span class="text-green-400">✓</span> ${data.scan_result}</a></td></tr>`;
+                        } else {
+                            resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${data.scan_result}</td></tr>`;
+                        }
+                    }
+
                     resultHtml += '</tbody></table></div>';
                     showResultHtml(resultHtml, 'success');
                 } else {
-                    // Create HTML table for error result
+                    // Create HTML table for error result with hand emoji
                     let resultHtml = '<h3 class="text-xl font-bold mb-4">Storage Model Scan Results:</h3>';
                     resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
                     resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
-                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><span class="text-red-400">✗</span> Error - ${data.error}</td></tr>`;
+                    if (data.scan_uuid) {
+                        resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${data.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-yellow-400 hover:text-yellow-300 underline"><span class="text-yellow-400">✋</span> ERROR</a></td></tr>`;
+                    } else {
+                        resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><span class="text-yellow-400">✋</span> ERROR</td></tr>`;
+                    }
                     resultHtml += '</tbody></table></div>';
                     showResultHtml(resultHtml, 'error');
                 }
@@ -741,9 +816,32 @@
                     data.results.forEach((result, index) => {
                         const rowClass = index % 2 === 0 ? 'bg-palo-input' : 'bg-palo-card';
                         if (result.status === 'success') {
-                            resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${result.scan_result}</td></tr>`;
+                            // Check the scan result to determine the display
+                            if (result.scan_result.includes('EvalOutcome.BLOCKED')) {
+                                if (result.scan_uuid) {
+                                    resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${result.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-red-400 hover:text-red-300 underline"><span class="text-red-400">✗</span> BLOCKED</a></td></tr>`;
+                                } else {
+                                    resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><span class="text-red-400">✗</span> BLOCKED</td></tr>`;
+                                }
+                            } else if (result.scan_result.includes('EvalOutcome.ALLOWED')) {
+                                if (result.scan_uuid) {
+                                    resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${result.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-green-400 hover:text-green-300 underline"><span class="text-green-400">✓</span> ALLOWED</a></td></tr>`;
+                                } else {
+                                    resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ALLOWED</td></tr>`;
+                                }
+                            } else {
+                                if (result.scan_uuid) {
+                                    resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${result.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-green-400 hover:text-green-300 underline"><span class="text-green-400">✓</span> ${result.scan_result}</a></td></tr>`;
+                                } else {
+                                    resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${result.scan_result}</td></tr>`;
+                                }
+                            }
                         } else {
-                            resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><span class="text-red-400">✗</span> Error - ${result.error}</td></tr>`;
+                            if (result.scan_uuid) {
+                                resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><a href="https://stratacloudmanager.paloaltonetworks.com/ai-security/model-security/scans/${result.scan_uuid}/overview#timeRange%5Bvalue%5D=past-30-days" target="_blank" class="text-yellow-400 hover:text-yellow-300 underline"><span class="text-yellow-400">✋</span> ERROR</a></td></tr>`;
+                            } else {
+                                resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><span class="text-yellow-400">✋</span> ERROR</td></tr>`;
+                            }
                         }
                     });
 
