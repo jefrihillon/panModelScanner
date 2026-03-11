@@ -119,7 +119,7 @@ Note: **For production deployments, consider using the more secure Kubernetes se
 ## Option 3: Manual Installation
 1. Set up required environment variables or create and source .env file:
 
-2. Install AI Model Security.  See: https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security
+2. [Install AI Model Security](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security).
 
 3. Install remaining dependencies:
    ```bash
