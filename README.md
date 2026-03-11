@@ -6,6 +6,13 @@
 
 [Palo Alto Networks AI Model Scanning docs](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security)
 
+## What It Does
+
+The application provides users with 3 things:
+1. Simplify deployment by bypassing the [Palo Alto Networks Model Scanner Installation Steps](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security)
+2. Expose the user to the available search criteria made available by the HuggingFace API
+3. Provide immediate results for scanned models (full results can be found in Strata Cloud Manager)
+
 ## Scanning Methods
 
 1. **Hugging Face Models**: Scan models directly from Hugging Face Hub using URLs or search criteria
@@ -14,14 +21,7 @@
 
 Each scan supports [labeling](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/organize-security-scans-with-custom-labels) for better organization and outcome tracking.
 
-## What It Does
-
-The application provides users with 3 things:
-1. Simplify deployment by bypassing the [Palo Alto Networks Model Scanner Installation Steps](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security)
-2. Expose the user to the available search criteria made available by the HuggingFace API
-3. Provide immediate results for scanned models (full results can be found in Strata Cloud Manager)
-
-## Search Criteria
+## HuggingFace Search Criteria
 
 The application supports the following search criteria for finding Hugging Face models:
 - **Task Type (pipeline_tag)**: Filter by specific ML task (e.g., text-classification, image-classification, text-to-speech...)
@@ -44,7 +44,7 @@ The application supports the following search criteria for finding Hugging Face 
 
 ## Kubernetes
 
-2. Create a `deployment.yaml` or `pod.yaml` file to pull image (see example in kubernetes directory): jefrihillon/pan-model-scanner-ui:version.  Add your individual model scanner credentials as environment variables or Kubernetes secrets at runtime.  For production deployments, consider using more secure Kubernetes secrets over sensitive environment variables.
+2. Create a `deployment.yaml` or `pod.yaml` file to pull image (see example in kubernetes directory): jefrihillon/pan-model-scanner-ui:version.  Add your individual model scanner credentials as environment variables or Kubernetes secrets at runtime.  For production deployments, consider using the more secure Kubernetes secrets over sensitive environment variables.
    ```yaml
    env:
    - name: MODEL_SECURITY_CLIENT_ID
