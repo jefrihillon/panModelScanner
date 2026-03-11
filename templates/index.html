@@ -553,9 +553,21 @@
                 if (data.error) {
                     showResult(`Error: ${data.error}`, 'error');
                 } else if (data.status === 'success') {
-                    showResult(`Scan completed for ${data.model_id}: ${data.scan_result}`, 'success');
+                    // Create HTML table for single model result
+                    let resultHtml = '<h3 class="text-xl font-bold mb-4">Scan Results:</h3>';
+                    resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
+                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model ID</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
+                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${data.scan_result}</td></tr>`;
+                    resultHtml += '</tbody></table></div>';
+                    showResultHtml(resultHtml, 'success');
                 } else {
-                    showResult(`Error scanning ${data.model_id}: ${data.error}`, 'error');
+                    // Create HTML table for error result
+                    let resultHtml = '<h3 class="text-xl font-bold mb-4">Scan Results:</h3>';
+                    resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
+                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model ID</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
+                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">${data.model_id}</td><td class="py-2 px-4"><span class="text-red-400">✗</span> Error - ${data.error}</td></tr>`;
+                    resultHtml += '</tbody></table></div>';
+                    showResultHtml(resultHtml, 'error');
                 }
             })
             .catch(error => {
@@ -597,9 +609,21 @@
                 if (data.error) {
                     showResult(`Error: ${data.error}`, 'error');
                 } else if (data.status === 'success') {
-                    showResult(`Local model scan completed: ${data.scan_result}`, 'success');
+                    // Create HTML table for local model result
+                    let resultHtml = '<h3 class="text-xl font-bold mb-4">Local Model Scan Results:</h3>';
+                    resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
+                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
+                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${data.scan_result}</td></tr>`;
+                    resultHtml += '</tbody></table></div>';
+                    showResultHtml(resultHtml, 'success');
                 } else {
-                    showResult(`Error scanning local model: ${data.error}`, 'error');
+                    // Create HTML table for error result
+                    let resultHtml = '<h3 class="text-xl font-bold mb-4">Local Model Scan Results:</h3>';
+                    resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
+                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
+                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Local Model</td><td class="py-2 px-4"><span class="text-red-400">✗</span> Error - ${data.error}</td></tr>`;
+                    resultHtml += '</tbody></table></div>';
+                    showResultHtml(resultHtml, 'error');
                 }
             })
             .catch(error => {
@@ -650,9 +674,21 @@
                 if (data.error) {
                     showResult(`Error: ${data.error}`, 'error');
                 } else if (data.status === 'success') {
-                    showResult(`Storage model scan completed: ${data.scan_result}`, 'success');
+                    // Create HTML table for storage model result
+                    let resultHtml = '<h3 class="text-xl font-bold mb-4">Storage Model Scan Results:</h3>';
+                    resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
+                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
+                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${data.scan_result}</td></tr>`;
+                    resultHtml += '</tbody></table></div>';
+                    showResultHtml(resultHtml, 'success');
                 } else {
-                    showResult(`Error scanning storage model: ${data.error}`, 'error');
+                    // Create HTML table for error result
+                    let resultHtml = '<h3 class="text-xl font-bold mb-4">Storage Model Scan Results:</h3>';
+                    resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
+                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
+                    resultHtml += `<tr class="bg-palo-card border-b border-palo-input"><td class="py-2 px-4">Storage Model</td><td class="py-2 px-4"><span class="text-red-400">✗</span> Error - ${data.error}</td></tr>`;
+                    resultHtml += '</tbody></table></div>';
+                    showResultHtml(resultHtml, 'error');
                 }
             })
             .catch(error => {
@@ -697,15 +733,22 @@
                 if (data.error) {
                     showResult(`Error: ${data.error}`, 'error');
                 } else {
-                    let resultText = `Scanned ${data.models_scanned} models:\n\n`;
-                    data.results.forEach(result => {
+                    // Create HTML table for better organized results
+                    let resultHtml = `<h3 class="text-xl font-bold mb-4">Scanned ${data.models_scanned} models:</h3>`;
+                    resultHtml += '<div class="overflow-x-auto"><table class="min-w-full bg-palo-card border border-palo-input rounded-lg">';
+                    resultHtml += '<thead><tr class="bg-palo-input"><th class="py-2 px-4 text-left">Model ID</th><th class="py-2 px-4 text-left">Scan Result</th></tr></thead><tbody>';
+
+                    data.results.forEach((result, index) => {
+                        const rowClass = index % 2 === 0 ? 'bg-palo-input' : 'bg-palo-card';
                         if (result.status === 'success') {
-                            resultText += `${result.model_id}: ${result.scan_result}\n`;
+                            resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><span class="text-green-400">✓</span> ${result.scan_result}</td></tr>`;
                         } else {
-                            resultText += `${result.model_id}: Error - ${result.error}\n`;
+                            resultHtml += `<tr class="${rowClass} border-b border-palo-input"><td class="py-2 px-4">${result.model_id}</td><td class="py-2 px-4"><span class="text-red-400">✗</span> Error - ${result.error}</td></tr>`;
                         }
                     });
-                    showResult(resultText, 'success');
+
+                    resultHtml += '</tbody></table></div>';
+                    showResultHtml(resultHtml, 'success');
                 }
             })
             .catch(error => {
@@ -723,6 +766,27 @@
         function showResult(message, type) {
             const resultDiv = document.getElementById('result');
             resultDiv.textContent = message;
+
+            // Clear existing classes
+            resultDiv.className = 'mt-8 p-6 rounded-xl card fade-in border border-palo-input ';
+
+            // Add appropriate classes based on type
+            if (type === 'success') {
+                resultDiv.classList.add('bg-green-900', 'border-green-700', 'text-green-100');
+            } else {
+                resultDiv.classList.add('bg-red-900', 'border-red-700', 'text-red-100');
+            }
+
+            resultDiv.classList.remove('hidden');
+
+            // Scroll to results
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Show result message with HTML content
+        function showResultHtml(htmlContent, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = htmlContent;
 
             // Clear existing classes
             resultDiv.className = 'mt-8 p-6 rounded-xl card fade-in border border-palo-input ';
