@@ -25,16 +25,30 @@ def scan_hf_model(model, security_group_uuid, env_label="default"):
                 model_version=model_version,
                 labels={ "env": env_label }
         )
-        return f"{model.modelId} scan completed: {result.eval_outcome}"
+        # Return both the eval_outcome and scan UUID if available
+        scan_uuid = getattr(result, 'scan_uuid', None) if hasattr(result, 'scan_uuid') else None
+        return {
+            "model_id": model.modelId,
+            "scan_result": result.eval_outcome,
+            "scan_uuid": scan_uuid,
+            "status": "success"
+        }
     except Exception as e:
-        return f"{model.modelId} scan failed: {str(e)}"
+        return {
+            "model_id": model.modelId,
+            "error": str(e),
+            "status": "error"
+        }
 
 def scan_local_model(model_path, security_group_uuid, env_label="default", model_name="", model_version=""):
     """Scan a local model file for security vulnerabilities"""
     try:
         # Validate that the model path exists
         if not os.path.exists(model_path):
-            return f"Local model scan failed: Model path '{model_path}' does not exist"
+            return {
+                "error": f"Local model scan failed: Model path '{model_path}' does not exist",
+                "status": "error"
+            }
 
         # Scan the local model
         result = client.scan(
@@ -44,9 +58,20 @@ def scan_local_model(model_path, security_group_uuid, env_label="default", model
                 model_version=model_version if model_version else "1.0",
                 labels={ "env": env_label }
         )
-        return f"Local model scan completed: {result.eval_outcome}"
+
+        # Return both the eval_outcome and scan UUID if available
+        scan_uuid = getattr(result, 'scan_uuid', None) if hasattr(result, 'scan_uuid') else None
+        return {
+            "model_id": model_name if model_name else "local-model",
+            "scan_result": result.eval_outcome,
+            "scan_uuid": scan_uuid,
+            "status": "success"
+        }
     except Exception as e:
-        return f"Local model scan failed: {str(e)}"
+        return {
+            "error": f"Local model scan failed: {str(e)}",
+            "status": "error"
+        }
 
 def download_from_s3(s3_uri, temp_dir):
     """Download a model from S3 to a temporary directory"""
@@ -189,9 +214,19 @@ def scan_storage_model(storage_uri, security_group_uuid, env_label="default", mo
                 labels={ "env": env_label }
         )
 
-        return f"Storage model scan completed: {result.eval_outcome}"
+        # Return both the eval_outcome and scan UUID if available
+        scan_uuid = getattr(result, 'scan_uuid', None) if hasattr(result, 'scan_uuid') else None
+        return {
+            "model_id": model_name if model_name else "storage-model",
+            "scan_result": result.eval_outcome,
+            "scan_uuid": scan_uuid,
+            "status": "success"
+        }
     except Exception as e:
-        return f"Storage model scan failed: {str(e)}"
+        return {
+            "error": f"Storage model scan failed: {str(e)}",
+            "status": "error"
+        }
     finally:
         # Clean up temporary directory
         if temp_dir and os.path.exists(temp_dir):
@@ -203,7 +238,10 @@ def scan_specific_model(model_url, security_group_uuid, env_label="default"):
         model_info = api.model_info(model_url.replace(HF_URI, ""))
         return scan_hf_model(model_info, security_group_uuid, env_label)
     except Exception as e:
-        return f"Failed to scan model: {str(e)}"
+        return {
+            "error": f"Failed to scan model: {str(e)}",
+            "status": "error"
+        }
 
 def scan_models_by_criteria(tag=None, author=None, model_name=None, search=None,
                            trained_dataset=None, library=None, language=None,
@@ -248,7 +286,7 @@ def scan_models_by_criteria(tag=None, author=None, model_name=None, search=None,
 
         return results
     except Exception as e:
-        return [f"Failed to scan models: {str(e)}"]
+        return [{"error": f"Failed to scan models: {str(e)}", "status": "error"}]
 
 def run_scan():
     """Run the interactive command-line scanner"""

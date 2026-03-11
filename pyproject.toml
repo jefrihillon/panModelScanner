@@ -1,7 +1,7 @@
 [project]
-name = "airs-api"
-version = "0.1.0"
-description = "Add your description here"
+name = "pan-model-scanner-ui"
+version = "1.2"
+description = "PAN Model Security Scanner UI"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -12,6 +12,3 @@ dependencies = [
     "azure-storage-blob>=12.28.0",
     "requests>=2.32.0"
 ]
-
-[[tool.uv.index]]
-url = "https://us-west1-python.pkg.dev/pairs-modelsec-prd-l9mu/ms-prod-usw1-mp-main-pypi/simple/"

@@ -28,31 +28,36 @@ def scan_hf_model_web():
 
     try:
         # Use the existing function but parse the result for web display
-        result_text = scan_specific_model(model_url, security_group_uuid, env_label)
-        # Parse the result to extract model ID and scan outcome
-        if "scan completed:" in result_text:
-            parts = result_text.split(" scan completed: ")
-            model_id = parts[0]
-            scan_result = parts[1]
-            return jsonify({
-                "model_id": model_id,
-                "scan_result": scan_result,
-                "status": "success"
-            })
-        elif "scan failed:" in result_text:
-            parts = result_text.split(" scan failed: ")
-            model_id = parts[0]
-            error = parts[1]
-            return jsonify({
-                "model_id": model_id,
-                "error": error,
-                "status": "error"
-            })
+        result = scan_specific_model(model_url, security_group_uuid, env_label)
+
+        # Check if result is a dict (new format) or string (old format)
+        if isinstance(result, dict):
+            return jsonify(result)
         else:
-            return jsonify({
-                "result": result_text,
-                "status": "unknown"
-            })
+            # Parse the result to extract model ID and scan outcome
+            if "scan completed:" in result:
+                parts = result.split(" scan completed: ")
+                model_id = parts[0]
+                scan_result = parts[1]
+                return jsonify({
+                    "model_id": model_id,
+                    "scan_result": scan_result,
+                    "status": "success"
+                })
+            elif "scan failed:" in result:
+                parts = result.split(" scan failed: ")
+                model_id = parts[0]
+                error = parts[1]
+                return jsonify({
+                    "model_id": model_id,
+                    "error": error,
+                    "status": "error"
+                })
+            else:
+                return jsonify({
+                    "result": result,
+                    "status": "unknown"
+                })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -81,32 +86,36 @@ def scan_local_model_web():
 
         # Scan the local model
         from scan_hf_models import scan_local_model
-        result_text = scan_local_model(temp_file_path, security_group_uuid, env_label, model_name, model_version)
+        result = scan_local_model(temp_file_path, security_group_uuid, env_label, model_name, model_version)
 
         # Clean up temporary file
         os.remove(temp_file_path)
         os.rmdir(temp_dir)
 
-        # Parse the result
-        if "scan completed:" in result_text:
-            parts = result_text.split(" scan completed: ")
-            scan_result = parts[1] if len(parts) > 1 else result_text
-            return jsonify({
-                "scan_result": scan_result,
-                "status": "success"
-            })
-        elif "scan failed:" in result_text:
-            parts = result_text.split(" scan failed: ")
-            error = parts[1] if len(parts) > 1 else result_text
-            return jsonify({
-                "error": error,
-                "status": "error"
-            })
+        # Check if result is a dict (new format) or string (old format)
+        if isinstance(result, dict):
+            return jsonify(result)
         else:
-            return jsonify({
-                "result": result_text,
-                "status": "unknown"
-            })
+            # Parse the result
+            if "scan completed:" in result:
+                parts = result.split(" scan completed: ")
+                scan_result = parts[1] if len(parts) > 1 else result
+                return jsonify({
+                    "scan_result": scan_result,
+                    "status": "success"
+                })
+            elif "scan failed:" in result:
+                parts = result.split(" scan failed: ")
+                error = parts[1] if len(parts) > 1 else result
+                return jsonify({
+                    "error": error,
+                    "status": "error"
+                })
+            else:
+                return jsonify({
+                    "result": result,
+                    "status": "unknown"
+                })
     except Exception as e:
         # Clean up temporary files even if there's an error
         try:
@@ -136,28 +145,32 @@ def scan_storage_model_web():
     try:
         # Scan the storage model
         from scan_hf_models import scan_storage_model
-        result_text = scan_storage_model(storage_uri, security_group_uuid, env_label, model_name, model_version, temp_path)
+        result = scan_storage_model(storage_uri, security_group_uuid, env_label, model_name, model_version, temp_path)
 
-        # Parse the result
-        if "scan completed:" in result_text:
-            parts = result_text.split(" scan completed: ")
-            scan_result = parts[1] if len(parts) > 1 else result_text
-            return jsonify({
-                "scan_result": scan_result,
-                "status": "success"
-            })
-        elif "scan failed:" in result_text:
-            parts = result_text.split(" scan failed: ")
-            error = parts[1] if len(parts) > 1 else result_text
-            return jsonify({
-                "error": error,
-                "status": "error"
-            })
+        # Check if result is a dict (new format) or string (old format)
+        if isinstance(result, dict):
+            return jsonify(result)
         else:
-            return jsonify({
-                "result": result_text,
-                "status": "unknown"
-            })
+            # Parse the result
+            if "scan completed:" in result:
+                parts = result.split(" scan completed: ")
+                scan_result = parts[1] if len(parts) > 1 else result
+                return jsonify({
+                    "scan_result": scan_result,
+                    "status": "success"
+                })
+            elif "scan failed:" in result:
+                parts = result.split(" scan failed: ")
+                error = parts[1] if len(parts) > 1 else result
+                return jsonify({
+                    "error": error,
+                    "status": "error"
+                })
+            else:
+                return jsonify({
+                    "result": result,
+                    "status": "unknown"
+                })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -214,30 +227,35 @@ def scan_models_by_criteria_web():
 
         # Parse results for web display
         parsed_results = []
-        for result_text in results_text:
-            if "scan completed:" in result_text:
-                parts = result_text.split(" scan completed: ")
-                model_id = parts[0]
-                scan_result = parts[1]
-                parsed_results.append({
-                    "model_id": model_id,
-                    "scan_result": scan_result,
-                    "status": "success"
-                })
-            elif "scan failed:" in result_text:
-                parts = result_text.split(" scan failed: ")
-                model_id = parts[0]
-                error = parts[1]
-                parsed_results.append({
-                    "model_id": model_id,
-                    "error": error,
-                    "status": "error"
-                })
+        for result in results_text:
+            # Check if result is a dict (new format) or string (old format)
+            if isinstance(result, dict):
+                parsed_results.append(result)
             else:
-                parsed_results.append({
-                    "result": result_text,
-                    "status": "unknown"
-                })
+                # Handle old string format
+                if "scan completed:" in result:
+                    parts = result.split(" scan completed: ")
+                    model_id = parts[0]
+                    scan_result = parts[1]
+                    parsed_results.append({
+                        "model_id": model_id,
+                        "scan_result": scan_result,
+                        "status": "success"
+                    })
+                elif "scan failed:" in result:
+                    parts = result.split(" scan failed: ")
+                    model_id = parts[0]
+                    error = parts[1]
+                    parsed_results.append({
+                        "model_id": model_id,
+                        "error": error,
+                        "status": "error"
+                    })
+                else:
+                    parsed_results.append({
+                        "result": result,
+                        "status": "unknown"
+                    })
 
         return jsonify({
             "models_scanned": len(parsed_results),
