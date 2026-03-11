@@ -18,17 +18,10 @@ Each scan supports [labeling](https://docs.paloaltonetworks.com/ai-runtime-secur
 
 ## What It Does
 
-The application provides a browser-based UI for the Palo Alto Networks Model Scanning Client to use the Hugging Face Hub API, local model storage and/or public block storage to scan models for potential security risks.
-
-## Features
-
-- User-friendly web interface
-- Scan specific Hugging Face models by URL
-- Scan multiple models using available search criteria published via the HuggingFace API
-- Scan local model files with direct upload
-- Scan models hosted in cloud object storage (Amazon S3, Google Cloud Storage, Azure Blob Storage)
-- Responsive design that works on desktop and mobile devices
-- Real-time feedback with loading indicators and ALLOWED/BLOCKED outcomes
+The application provides users with 3 things:
+1. Simplify deployment by bypassing the [Palo Alto Networks Model Scanner Installation Steps](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security)
+2. Expose the user to the available search criteria made available by the HuggingFace API
+3. Provide immediate results to the result of scanned models (full results can be found in Strata Cloud Manager)
 
 ## Search Criteria
 
