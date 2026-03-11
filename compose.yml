@@ -1,5 +1,6 @@
 services:
-  model-scanner:
+  pan-model-scanner-ui:
+    container_name: pan-model-scanner-ui
     build:
       context: .
       secrets:

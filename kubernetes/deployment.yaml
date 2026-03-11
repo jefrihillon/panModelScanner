@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-scanner-deployment
+  namespace: model-scanner
+  labels:
+    app: model-scanner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: model-scanner
+  template:
+    metadata:
+      labels:
+        app: model-scanner
+    spec:
+      containers:
+      - name: model-scanner
+        image: jefrihillon/pan-model-scanner-ui:1.2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MODEL_SECURITY_CLIENT_ID
+          value: 
+        - name: MODEL_SECURITY_CLIENT_SECRET
+          value: 
+        - name: TSG_ID
+          value: 
