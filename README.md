@@ -8,7 +8,7 @@
 
 ## What It Does
 
-The application provides users with 3 things:
+The application provides the user with 3 benefits:
 1. Simplify deployment by bypassing the [Palo Alto Networks Model Scanner Installation Steps](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security)
 2. Introduce all available search criteria of the [HuggingFace API](https://huggingface.co/docs/inference-providers/tasks/index) to the user
 3. Provide immediate results for scanned models (full results found @[Strata Cloud Manager](https://stratacloudmanager.paloaltonetworks.com))
