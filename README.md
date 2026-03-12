@@ -1,17 +1,15 @@
 # PAN Model Security Scanner UI
-
-<img width="1176" height="841" alt="Screenshot 2026-03-05 at 2 20 01 PM" src="https://github.com/user-attachments/assets/0afb4391-6335-4d24-996d-753d43b937f9" />
-
-<img width="1174" height="844" alt="Screenshot 2026-03-05 at 2 21 58 PM" src="https://github.com/user-attachments/assets/8838c8fb-4ecb-4426-a991-f625d22c122e" />
-
-[Palo Alto Networks AI Model Scanning docs](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security)
-
 ## What It Does
 
 The application provides the user with 3 benefits:
 1. Simplify deployment by bypassing the [Palo Alto Networks Model Scanner Installation Steps](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security/install-ai-model-security)
 2. Introduce all available search criteria of the [HuggingFace API](https://huggingface.co/docs/inference-providers/tasks/index) to the user
 3. Provide immediate results for scanned models (full results found @[Strata Cloud Manager](https://stratacloudmanager.paloaltonetworks.com))
+<img width="1176" height="841" alt="Screenshot 2026-03-05 at 2 20 01 PM" src="https://github.com/user-attachments/assets/0afb4391-6335-4d24-996d-753d43b937f9" />
+
+<img width="1174" height="844" alt="Screenshot 2026-03-05 at 2 21 58 PM" src="https://github.com/user-attachments/assets/8838c8fb-4ecb-4426-a991-f625d22c122e" />
+
+[Palo Alto Networks AI Model Scanning docs](https://docs.paloaltonetworks.com/ai-runtime-security/ai-model-security/model-security-to-secure-your-ai-models/get-started-with-ai-model-security)
 
 ## Scanning Methods
 
